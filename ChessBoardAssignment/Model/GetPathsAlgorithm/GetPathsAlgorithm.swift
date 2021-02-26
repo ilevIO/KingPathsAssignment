@@ -11,7 +11,7 @@ struct GetPathsAlgorithm {
     let stepsLimit: Int
     let boardSize: Int
     
-    func createNodes(currPos: ChessPosition, parent: PathNode, currStep: Int, pathsPossibilities: [[[Int]]]) {
+    func createNodes(figure: ChessFigure, currPos: ChessPosition, parent: PathNode, currStep: Int, pathsPossibilities: [[[Int]]]) {
         //Avoiding cases when destination reached in less steps
         if currPos == destination && currStep > 1 {
             return
@@ -22,10 +22,10 @@ struct GetPathsAlgorithm {
             return
         }
         
-        let possibleMoves = KingFigure(location: currPos).possibleMoves(within: boardSize)
+        let possibleMoves = figure.possibleMoves(from: currPos, within: boardSize)
         for possible in possibleMoves
         where pathsPossibilities[possible.column][possible.row][currStep - 1] > 0 {
-            createNodes(currPos: possible, parent: node, currStep: currStep - 1, pathsPossibilities: pathsPossibilities)
+            createNodes(figure: figure, currPos: possible, parent: node, currStep: currStep - 1, pathsPossibilities: pathsPossibilities)
         }
     }
     
@@ -40,7 +40,7 @@ struct GetPathsAlgorithm {
         }
     }
     
-    func getPaths() -> [[ChessPosition]] {
+    func getPaths(for figure: ChessFigure) -> [[ChessPosition]] {
         var pathsPossibilities = [[[Int]]]
             .init(
                 repeating: [[Int]]
@@ -59,9 +59,9 @@ struct GetPathsAlgorithm {
 
         //Counting steps to reach destination from each cell
         for k in 1...stepsLimit {
-            for column in max(0, source.column - stepsLimit)..<min(boardSize, source.column + stepsLimit) {
-                for row in max(0, source.row - stepsLimit)..<min(boardSize, source.row + stepsLimit) {
-                    let possibleMoves = KingFigure(location: .init(row: row, column: column)).possibleMoves(within: boardSize)
+            for column in 0..<boardSize {
+                for row in 0..<boardSize {
+                    let possibleMoves = figure.possibleMoves(from: .init(row: row, column: column), within: boardSize)
                     
                     pathsPossibilities[column][row][k] = possibleMoves.reduce(0) {
                         $0 + pathsPossibilities[$1.column][$1.row][k-1]
@@ -74,15 +74,15 @@ struct GetPathsAlgorithm {
         let treeRoot = PathNode(pos: source)
         
         var paths: [[ChessPosition]] = .init()
-        let possibleMoves = KingFigure(location: source)
-            .possibleMoves(within: boardSize)
+        let possibleMoves = figure
+            .possibleMoves(from: source, within: boardSize)
             .filter({
                 pathsPossibilities[$0.column][$0.row][stepsLimit - 1] > 0
             })
         if !possibleMoves.isEmpty {
             //For each move where it is possible to reach destination in stepsLimit
             for possible in possibleMoves {
-                createNodes(currPos: possible, parent: treeRoot, currStep: stepsLimit - 1, pathsPossibilities: pathsPossibilities)
+                createNodes(figure: figure, currPos: possible, parent: treeRoot, currStep: stepsLimit - 1, pathsPossibilities: pathsPossibilities)
             }
             //Mapping tree into array of paths
             mapToPaths(node: treeRoot, path: [], paths: &paths)

@@ -6,6 +6,5 @@
 //
 
 protocol ChessFigure {
-    var location: ChessPosition { get set }
-    func possibleMoves(within boardSize: Int) -> [ChessPosition]
+    func possibleMoves(from location: ChessPosition, within boardSize: Int) -> [ChessPosition]
 }
