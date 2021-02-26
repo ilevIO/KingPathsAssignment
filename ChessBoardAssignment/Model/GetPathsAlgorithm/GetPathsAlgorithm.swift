@@ -11,7 +11,7 @@ struct GetPathsAlgorithm {
     let stepsLimit: Int
     let boardSize: Int
     
-    func createNodes(figure: ChessFigure, currPos: ChessPosition, parent: PathNode, currStep: Int, pathsPossibilities: [[[Int]]], traversed: [ChessPosition]) {
+    func createNodes(figure: ChessFigure, currPos: ChessPosition, parent: PathNode, currStep: Int, pathsPossibilities: [[[Int]]]) {
         //Avoiding cases when destination reached in less steps
         if currPos == destination && currStep > 1 {
             return
@@ -23,16 +23,9 @@ struct GetPathsAlgorithm {
         }
         
         let possibleMoves = figure.possibleMoves(from: currPos, within: boardSize)
-            .filter({
-                !traversed.contains($0) && pathsPossibilities[$0.column][$0.row].firstIndex(where: { $0 > 0 }) == currStep - 1
-            })
         for possible in possibleMoves
-        //where pathsPossibilities[possible.column][possible.row][currStep - 1] > 0 {
-        {
-            createNodes(figure: figure, currPos: possible, parent: node, currStep: currStep - 1, pathsPossibilities: pathsPossibilities, traversed: traversed + [currPos])
-        }
-        if possibleMoves.isEmpty {
-            parent.children.removeAll(where: { $0.position == currPos })
+        where pathsPossibilities[possible.column][possible.row][currStep - 1] > 0 {
+            createNodes(figure: figure, currPos: possible, parent: node, currStep: currStep - 1, pathsPossibilities: pathsPossibilities)
         }
     }
     
@@ -84,12 +77,12 @@ struct GetPathsAlgorithm {
         let possibleMoves = figure
             .possibleMoves(from: source, within: boardSize)
             .filter({
-                pathsPossibilities[$0.column][$0.row].firstIndex(where: { $0 > 0 }) == stepsLimit - 1
+                pathsPossibilities[$0.column][$0.row][stepsLimit - 1] > 0
             })
         if !possibleMoves.isEmpty {
             //For each move where it is possible to reach destination in stepsLimit
             for possible in possibleMoves {
-                createNodes(figure: figure, currPos: possible, parent: treeRoot, currStep: stepsLimit - 1, pathsPossibilities: pathsPossibilities, traversed: [source])
+                createNodes(figure: figure, currPos: possible, parent: treeRoot, currStep: stepsLimit - 1, pathsPossibilities: pathsPossibilities)
             }
             //Mapping tree into array of paths
             mapToPaths(node: treeRoot, path: [], paths: &paths)
