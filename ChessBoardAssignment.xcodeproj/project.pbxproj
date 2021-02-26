@@ -32,6 +32,8 @@
 		D15CD37B25E9096B00EDB156 /* KingFigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD37A25E9096B00EDB156 /* KingFigure.swift */; };
 		D15CD38425E9099300EDB156 /* ChessPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD38325E9099300EDB156 /* ChessPosition.swift */; };
 		D15CD38925E909AB00EDB156 /* BoardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD38825E909AB00EDB156 /* BoardState.swift */; };
+		D15CD39B25E91E8900EDB156 /* RoundedLineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD39A25E91E8900EDB156 /* RoundedLineRenderer.swift */; };
+		D15CD3A325E91EA700EDB156 /* ArrowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD3A225E91EA700EDB156 /* ArrowRenderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +85,8 @@
 		D15CD37A25E9096B00EDB156 /* KingFigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KingFigure.swift; sourceTree = "<group>"; };
 		D15CD38325E9099300EDB156 /* ChessPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessPosition.swift; sourceTree = "<group>"; };
 		D15CD38825E909AB00EDB156 /* BoardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardState.swift; sourceTree = "<group>"; };
+		D15CD39A25E91E8900EDB156 /* RoundedLineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedLineRenderer.swift; sourceTree = "<group>"; };
+		D15CD3A225E91EA700EDB156 /* ArrowRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowRenderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +193,7 @@
 		D15CD31925E85E3800EDB156 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				D15CD39925E91E7B00EDB156 /* Render */,
 				D15CD33F25E8E00D00EDB156 /* Constants */,
 				D15CD31A25E85E3D00EDB156 /* Extensions */,
 			);
@@ -226,7 +231,6 @@
 			isa = PBXGroup;
 			children = (
 				D15CD34B25E8E0FB00EDB156 /* View */,
-				D15CD34625E8E07A00EDB156 /* BoardRenderer.swift */,
 			);
 			path = Auxiliary;
 			sourceTree = "<group>";
@@ -265,6 +269,16 @@
 				D15CD38825E909AB00EDB156 /* BoardState.swift */,
 			);
 			path = Board;
+			sourceTree = "<group>";
+		};
+		D15CD39925E91E7B00EDB156 /* Render */ = {
+			isa = PBXGroup;
+			children = (
+				D15CD39A25E91E8900EDB156 /* RoundedLineRenderer.swift */,
+				D15CD3A225E91EA700EDB156 /* ArrowRenderer.swift */,
+				D15CD34625E8E07A00EDB156 /* BoardRenderer.swift */,
+			);
+			path = Render;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -400,8 +414,10 @@
 				D15CD2BB25E7C50A00EDB156 /* ViewController.swift in Sources */,
 				D15CD36825E9058500EDB156 /* Int+Letter.swift in Sources */,
 				D15CD34725E8E07A00EDB156 /* BoardRenderer.swift in Sources */,
+				D15CD39B25E91E8900EDB156 /* RoundedLineRenderer.swift in Sources */,
 				D15CD34D25E8E10300EDB156 /* BoardView.swift in Sources */,
 				D15CD37225E9094F00EDB156 /* ChessFigure.swift in Sources */,
+				D15CD3A325E91EA700EDB156 /* ArrowRenderer.swift in Sources */,
 				D15CD35825E8FDFD00EDB156 /* GetPathsAlgorithm.swift in Sources */,
 				D15CD34125E8E01800EDB156 /* Colors.swift in Sources */,
 				D15CD35225E8E8B300EDB156 /* ChessBoard+View.swift in Sources */,
