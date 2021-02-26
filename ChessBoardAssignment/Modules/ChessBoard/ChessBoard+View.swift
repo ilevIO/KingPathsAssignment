@@ -13,7 +13,7 @@ extension ChessBoard {
     }
     
     class View: UIViewController {
-        static var resultCellIdentifier = "ResultCell"
+        static let resultCellIdentifier = "ResultCell"
         
         let presenter: Presenter!
         

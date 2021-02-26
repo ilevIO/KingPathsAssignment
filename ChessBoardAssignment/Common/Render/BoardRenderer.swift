@@ -52,7 +52,6 @@ class BoardRenderer {
         layer.addSublayer(gridLayer)
         let path = CGMutablePath()
         
-        
         for column in 0..<board.size {
             
             drawLabels(at: column, boardSize: board.size, to: layer)
