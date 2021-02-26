@@ -35,7 +35,7 @@ class BoardView: UIView {
         boardLayer.sublayers = nil
         resultLayer.sublayers = nil
         boardRenderer.drawGrid(to: boardLayer)
-        boardRenderer.drawResults(to: resultLayer)
+        boardRenderer.drawPaths(to: resultLayer)
         boardLayer.addSublayer(resultLayer)
         
         //Scaling to fill view

@@ -68,6 +68,11 @@ extension ChessBoard {
             }
         }
         
+        private func setFieldsValues() {
+            movesLimitTextField.text = "\(presenter.board.movesLimit)"
+            boardSizeTextField.text = "\(presenter.board.size)"
+        }
+        
         //MARK: - Setup
         private func buildHierarchy() {
             view.addSubview(boardView)
@@ -107,6 +112,7 @@ extension ChessBoard {
             resultsTableview.dataSource = self
             resultsTableview.register(UITableViewCell.self, forCellReuseIdentifier: Self.resultCellIdentifier)
             resultsTableview.layer.cornerRadius = viewCornerRadius
+            resultsTableview.separatorStyle = .none
             
             movesLimitLabel.text = "Moves limit"
             boardSizeLabel.text = "Board size"
@@ -114,14 +120,14 @@ extension ChessBoard {
             movesLimitLabel.textColor = UIColor.darkGray
             boardSizeLabel.textColor = UIColor.darkGray
             
-            movesLimitTextField.text = "\(presenter.board.movesLimit)"
-            boardSizeTextField.text = "\(presenter.board.size)"
+            setFieldsValues()
             
             setValuesButton.addTarget(self, action: #selector(setValuesButtonTapped(_:)), for: .touchUpInside)
             setValuesButton.setTitle("Set", for: .normal)
             setValuesButton.backgroundColor = .systemGreen
             inputStackView.axis = .vertical
             inputStackView.distribution = .fillProportionally
+            
         }
         
         private func setupLayout() {
@@ -189,6 +195,7 @@ extension ChessBoard {
 
 extension ChessBoard.View: ChessGameView {
     func updateBoard() {
+        setFieldsValues()
         boardView.updateBoard()
         resultsTableview.reloadData()
     }

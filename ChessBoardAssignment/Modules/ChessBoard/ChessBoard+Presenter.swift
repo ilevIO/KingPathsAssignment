@@ -35,16 +35,19 @@ extension ChessBoard {
         }
         
         func setBoardParameters(size: String, movesLimit: String) {
-            guard
+            if
                 let size = Int(size),
                 let movesLimit = Int(movesLimit),
                 allowedSizeRange.contains(size),
-                movesLimit > 0
-            else { return }
-            board.clear()
-            board.size = size
-            board.movesLimit = movesLimit
-            results = []
+                movesLimit > 0 {
+                board.clear()
+                board.size = size
+                board.movesLimit = movesLimit
+                results = []
+            } else {
+                view?.alert(with: "Size should be within range \(allowedSizeRange.lowerBound)...\(allowedSizeRange.upperBound) and moves limit greater than zero")
+            }
+            
             view?.updateBoard()
         }
         
@@ -54,21 +57,20 @@ extension ChessBoard {
                 guard let self = self else { return }
                 guard !foundRoutes.isEmpty else {
                     self.board.clear()
-                    self.view?.alert(with: "No routes found")
+                    self.view?.alert(with: "No paths found")
                     return
                 }
                 self.results = []
-                for route in foundRoutes {
-                    var routeString = ""
-                    for (index, cell) in route.enumerated() {
-                        //self.board.selectedCells.append(cell)
-                        routeString += cell.column.boardLetter ?? "\(cell.column)"
-                        routeString += "\(self.board.size - cell.row)"
-                        if index < route.count - 1 {
-                            routeString += " -> "
+                for path in foundRoutes {
+                    var pathString = ""
+                    for cell in path {
+                        pathString += cell.column.boardLetter ?? "\(cell.column)"
+                        pathString += "\(self.board.size - cell.row)"
+                        if cell != path.last {
+                            pathString += " -> "
                         }
                     }
-                    self.results.append(routeString)
+                    self.results.append(pathString)
                 }
                 DispatchQueue.main.async {
                     self.view?.update()

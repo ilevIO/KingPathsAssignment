@@ -81,7 +81,7 @@ struct RoundedLineRenderer {
     }
     
     func line(sequnce: [CGPoint], color: CGColor) -> CAShapeLayer? {
-        guard let resultEnd = sequnce.last, sequnce.count > 1 else { return nil }
+        guard let sequenceEnd = sequnce.last, sequnce.count > 1 else { return nil }
         let linePath = CGMutablePath()
         
         var prevPoint = sequnce[0]
@@ -96,7 +96,7 @@ struct RoundedLineRenderer {
             prevPoint = sequnce[i]
         }
         
-        let pathEndPoint = resultEnd
+        let pathEndPoint = sequenceEnd
         linePath.addLine(to: pathEndPoint)
         let pathLayer = CAShapeLayer()
         pathLayer.path = linePath
@@ -166,13 +166,13 @@ class BoardRenderer {
         gridLayer.path = path
     }
     
-    func drawResults(_ results: [[ChessPosition]], to layer: CALayer) {
-        for (resultIndex, result) in results.enumerated() {
+    func drawPaths(_ paths: [[ChessPosition]], to layer: CALayer) {
+        for (pathIndex, path) in paths.enumerated() {
             
-            let color = pathsColors[resultIndex % pathsColors.count].cgColor
+            let color = pathsColors[pathIndex % pathsColors.count].cgColor
             if let lineLayer = RoundedLineRenderer()
                 .line(
-                    sequnce: result.map( {
+                    sequnce: path.map( {
                         CGPoint(
                             x: CGFloat($0.column) * cellSize + cellSize / 2,
                             y: CGFloat($0.row) * cellSize + cellSize / 2
@@ -201,15 +201,15 @@ class BoardRenderer {
         
         layer.addSublayer(selectedCellsLayer)
         
-        drawResults(to: layer)
+        drawPaths(to: layer)
     }
     
-    func drawResults(to layer: CALayer) {
-        guard let board = board, let results = board.foundRoutes else { return }
+    func drawPaths(to layer: CALayer) {
+        guard let board = board, let paths = board.foundRoutes else { return }
         if let selectedResult = board.selectedRoute {
-            drawResults([results[selectedResult]], to: layer)
+            drawPaths([paths[selectedResult]], to: layer)
         } else {
-            drawResults(results, to: layer)
+            drawPaths(paths, to: layer)
         }
     }
 
