@@ -9,6 +9,8 @@ import UIKit
 
 extension ChessBoard {
     class Presenter {
+        private let allowedSizeRange = 6...16
+        
         weak var view: ChessGameView?
         var results: [String] = .init()
         var board: Board
@@ -19,7 +21,24 @@ extension ChessBoard {
         
         func resetTapped() {
             board.clear()
+            results = .init()
             view?.update()
+        }
+        
+        func selectedResult(at index: Int) {
+            if index < (board.foundRoutes?.count ?? 0) {
+                board.selectedRoute = board.foundRoutes?[index]
+                view?.update()
+            }
+        }
+        
+        func setBoardParameters(size: String, movesLimit: String) {
+            guard let size = Int(size), let movesLimit = Int(movesLimit) else { return }
+            board.clear()
+            board.size = size
+            board.movesLimit = movesLimit
+            results = []
+            view?.updateBoard()
         }
         
         init() {

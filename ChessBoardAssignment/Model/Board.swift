@@ -10,6 +10,7 @@ import CoreGraphics
 
 class Board {
     var size: Int = 6
+    var movesLimit: Int = 3
     
     private(set) var state: BoardState = .setStartPosition
     
@@ -17,12 +18,16 @@ class Board {
     var startPosition: ChessPosition?
     var endPosition: ChessPosition?
     
+    var foundRoutes: [[ChessPosition]]?
+    var selectedRoute: [ChessPosition]?
+    
     var findKingRoutesCompletion: (([[ChessPosition]]) -> Void)? = nil
     
     lazy var renderer = BoardRenderer(board: self)
     
-    func findKingRoutes(from: ChessPosition, to: ChessPosition) {
-        let paths = traverse(from: from, to: to, stepsLimit: 3, board: self)
+    func findKingRoutes(from source: ChessPosition, to destination: ChessPosition) {
+        let paths = GetPathsAlgorithm(source: source, destination: destination, stepsLimit: movesLimit, boardSize: size).getPaths()
+        foundRoutes = paths
         findKingRoutesCompletion?(paths)
     }
     
@@ -35,6 +40,8 @@ class Board {
         startPosition = nil
         endPosition = nil
         selectedCells = .init()
+        selectedRoute = nil
+        foundRoutes = nil
     }
     
     func tapped(at point: CGPoint) {
