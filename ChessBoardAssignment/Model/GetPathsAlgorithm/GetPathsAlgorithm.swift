@@ -5,8 +5,6 @@
 //  Created by Ilya Yelagov on 2/26/21.
 //
 
-import Foundation
-
 struct GetPathsAlgorithm {
     let source: ChessPosition
     let destination: ChessPosition
@@ -76,11 +74,14 @@ struct GetPathsAlgorithm {
         let treeRoot = Node(pos: source)
         
         var paths: [[ChessPosition]] = .init()
-        let possibleMoves = KingFigure(location: source).possibleMoves(within: boardSize)
+        let possibleMoves = KingFigure(location: source)
+            .possibleMoves(within: boardSize)
+            .filter({
+                pathsPossibilities[$0.column][$0.row][stepsLimit - 1] > 0
+            })
         if !possibleMoves.isEmpty {
             //For each move where it is possible to reach destination in stepsLimit
-            for possible in possibleMoves
-            where pathsPossibilities[possible.column][possible.row][stepsLimit - 1] > 0 {
+            for possible in possibleMoves {
                 createNodes(currPos: possible, parent: treeRoot, currStep: stepsLimit - 1, pathsPossibilities: pathsPossibilities)
             }
             //Mapping tree into array of paths

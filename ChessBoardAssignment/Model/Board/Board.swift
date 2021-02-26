@@ -5,7 +5,6 @@
 //  Created by Ilya Yelagov on 2/26/21.
 //
 
-import Foundation
 import CoreGraphics
 
 class Board {
@@ -47,15 +46,16 @@ class Board {
     func tapped(at point: CGPoint) {
         let row = Int(ceil(point.y * CGFloat(size))) - 1
         let column = Int(ceil(point.x * CGFloat(size))) - 1
-        self.selectedCells.append(.init(row: row, column: column))
-        //findKingRoutesCompletion?([])
+        
         switch state {
         case .setStartPosition:
             startPosition = .init(row: row, column: column)
+            selectedCells.append(.init(row: row, column: column))
             state = .setEndPosition
         case .setEndPosition:
             let _endPosition = ChessPosition(row: row, column: column)
             endPosition = _endPosition
+            selectedCells.append(.init(row: row, column: column))
             guard let startPosition = startPosition else { return }
             state = .none
             findKingRoutes(from: startPosition, to: _endPosition)

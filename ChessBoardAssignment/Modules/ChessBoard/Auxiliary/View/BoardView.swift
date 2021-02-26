@@ -23,7 +23,7 @@ class BoardView: UIView {
     
     override func draw(_ rect: CGRect) {
         resultLayer.sublayers = nil
-        boardRenderer.drawResults(to: resultLayer)
+        boardRenderer.drawCurrent(to: resultLayer)
     }
     
     override func layoutSubviews() {

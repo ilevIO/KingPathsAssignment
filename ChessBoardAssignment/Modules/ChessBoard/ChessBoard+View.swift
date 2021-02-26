@@ -162,6 +162,13 @@ extension ChessBoard.View: ChessGameView {
             self.boardView.setNeedsDisplay()
         }
     }
+    
+    func alert(with message: String) {
+        let alertController = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alertController.addAction(.init(title: "Ok", style: .cancel))
+        
+        present(alertController, animated: true, completion: nil)
+    }
 }
 
 extension ChessBoard.View: UITableViewDelegate, UITableViewDataSource {

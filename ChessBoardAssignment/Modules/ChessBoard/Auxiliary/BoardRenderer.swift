@@ -21,7 +21,6 @@ class BoardRenderer {
         layer.frame.size = .init(width: cellSize * boardSize, height: cellSize * boardSize)
         layer.backgroundColor = UIColor.lightGray.cgColor
         layer.frame.origin = .zero
-        let actualCellSize: CGFloat = cellSize
         
         let gridLayer = CAShapeLayer()
         layer.addSublayer(gridLayer)
@@ -56,7 +55,7 @@ class BoardRenderer {
             layer.addSublayer(verticalTextLayer)
             for j in 0..<board.size {
                 if (j + column) % 2 == 0{
-                    path.addRect(.init(x: CGFloat(column) * actualCellSize, y: CGFloat(j) * actualCellSize, width: actualCellSize, height: actualCellSize))
+                    path.addRect(.init(x: CGFloat(column) * cellSize, y: CGFloat(j) * cellSize, width: cellSize, height: cellSize))
                 }
             }
         }
@@ -91,33 +90,40 @@ class BoardRenderer {
         return layer
     }
     
+    func line(sequnce: [ChessPosition], color: CGColor) -> CAShapeLayer? {
+        guard let resultEnd = sequnce.last, sequnce.count > 1 else { return nil }
+        let linePath = CGMutablePath()
+        
+        var prevPoint = CGPoint(x: CGFloat(sequnce[0].column) * cellSize + cellSize / 2, y: CGFloat(sequnce[0].row) * cellSize + cellSize / 2)
+        linePath.move(to: prevPoint)
+        for i in 0..<sequnce.count - 1 {
+            let currPoint = CGPoint(x: CGFloat(sequnce[i].column) * cellSize + cellSize / 2, y: CGFloat(sequnce[i].row) * cellSize + cellSize / 2)
+            let nextPoint = CGPoint(x: CGFloat(sequnce[i + 1].column) * cellSize + cellSize / 2, y: CGFloat(sequnce[i + 1].row) * cellSize + cellSize / 2)
+            let params = getArcParams(prevPoint: prevPoint, currPoint: currPoint, nextPoint: nextPoint, radius: 10)
+            if !(params.center.x.isNaN || params.center.y.isNaN || params.startAngle.isNaN || params.endAngle.isNaN) {
+                linePath.addArc(center: params.center, radius: params.radius, startAngle: params.startAngle, endAngle: params.endAngle, clockwise: params.clockwise)
+            }
+            prevPoint = CGPoint(x: CGFloat(sequnce[i].column) * cellSize + cellSize / 2, y: CGFloat(sequnce[i].row) * cellSize + cellSize / 2)
+        }
+        
+        let pathEndPoint = CGPoint(x: CGFloat(resultEnd.column) * cellSize + cellSize / 2, y: CGFloat(resultEnd.row) * cellSize + cellSize / 2)
+        linePath.addLine(to: pathEndPoint)
+        let pathLayer = CAShapeLayer()
+        pathLayer.path = linePath
+        pathLayer.strokeColor = color
+        pathLayer.fillColor = UIColor.clear.cgColor
+        
+        pathLayer.addSublayer(arrow(from: prevPoint, to: pathEndPoint, size: 5, color: color))
+        return pathLayer
+    }
+    
     func drawResults(_ results: [[ChessPosition]], to layer: CALayer) {
         for (resultIndex, result) in results.enumerated() {
-            guard let resultEnd = result.last, result.count > 1 else { return }
-            let linePath = CGMutablePath()
             
-            var prevPoint = CGPoint(x: CGFloat(result[0].column) * cellSize + cellSize / 2, y: CGFloat(result[0].row) * cellSize + cellSize / 2)
-            linePath.move(to: prevPoint)
-            for i in 0..<result.count - 1 {
-                let currPoint = CGPoint(x: CGFloat(result[i].column) * cellSize + cellSize / 2, y: CGFloat(result[i].row) * cellSize + cellSize / 2)
-                let nextPoint = CGPoint(x: CGFloat(result[i + 1].column) * cellSize + cellSize / 2, y: CGFloat(result[i + 1].row) * cellSize + cellSize / 2)
-                let params = getArcParams(prevPoint: prevPoint, currPoint: currPoint, nextPoint: nextPoint, radius: 10)
-                if !(params.center.x.isNaN || params.center.y.isNaN || params.startAngle.isNaN || params.endAngle.isNaN) {
-                    linePath.addArc(center: params.center, radius: params.radius, startAngle: params.startAngle, endAngle: params.endAngle, clockwise: params.clockwise)
-                }
-                prevPoint = CGPoint(x: CGFloat(result[i].column) * cellSize + cellSize / 2, y: CGFloat(result[i].row) * cellSize + cellSize / 2)
-            }
-            
-            let pathEndPoint = CGPoint(x: CGFloat(resultEnd.column) * cellSize + cellSize / 2, y: CGFloat(resultEnd.row) * cellSize + cellSize / 2)
-            linePath.addLine(to: pathEndPoint)
-            let pathLayer = CAShapeLayer()
-            pathLayer.path = linePath
             let color = pathsColors[resultIndex % pathsColors.count].cgColor
-            pathLayer.strokeColor = color
-            pathLayer.fillColor = UIColor.clear.cgColor
-            
-            layer.addSublayer(pathLayer)
-            layer.addSublayer(arrow(from: prevPoint, to: pathEndPoint, size: 5, color: color))
+            if let lineLayer = line(sequnce: result, color: color) {
+                layer.addSublayer(lineLayer)
+            }
         }
         
     }
@@ -165,6 +171,24 @@ class BoardRenderer {
         startAngle = startAngle < 0 ? startAngle + 2 * CGFloat.pi : startAngle
         endAngle = endAngle < 0 ? endAngle + 2 * CGFloat.pi : endAngle
         return ArcParams(startAngle: startAngle, endAngle: endAngle, center: o, radius: radius, clockwise: angle > CGFloat.pi)
+    }
+    
+    func drawCurrent(to layer: CALayer) {
+        guard let board = board else { return }
+        
+        let selectedCellsPath = CGMutablePath()
+        for selectedCell in board.selectedCells {
+            selectedCellsPath.addRect(.init(x: CGFloat(selectedCell.column) * cellSize, y: CGFloat(selectedCell.row) * cellSize, width: cellSize, height: cellSize))
+        }
+        
+        let selectedCellsLayer = CAShapeLayer()
+        selectedCellsLayer.path = selectedCellsPath
+        selectedCellsLayer.fillColor = UIColor.white.cgColor
+        selectedCellsLayer.backgroundColor = UIColor.clear.cgColor
+        
+        layer.addSublayer(selectedCellsLayer)
+        
+        drawResults(to: layer)
     }
     
     func drawResults(to layer: CALayer) {

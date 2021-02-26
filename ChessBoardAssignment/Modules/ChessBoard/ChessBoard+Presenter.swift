@@ -15,8 +15,10 @@ extension ChessBoard {
         var results: [String] = .init()
         var board: Board
         
+        //MARK: - Events
         func boardViewTapped(at point: CGPoint) {
             board.tapped(at: point)
+            view?.update()
         }
         
         func resetTapped() {
@@ -33,7 +35,12 @@ extension ChessBoard {
         }
         
         func setBoardParameters(size: String, movesLimit: String) {
-            guard let size = Int(size), let movesLimit = Int(movesLimit) else { return }
+            guard
+                let size = Int(size),
+                let movesLimit = Int(movesLimit),
+                allowedSizeRange.contains(size),
+                movesLimit > 0
+            else { return }
             board.clear()
             board.size = size
             board.movesLimit = movesLimit
@@ -41,19 +48,21 @@ extension ChessBoard {
             view?.updateBoard()
         }
         
-        init() {
-            board = .init()
+        //MARK: - Setup()
+        func setup() {
             board.findKingRoutesCompletion = { [weak self] foundRoutes in
                 guard let self = self else { return }
+                guard !foundRoutes.isEmpty else {
+                    self.board.clear()
+                    self.view?.alert(with: "No routes found")
+                    return
+                }
                 self.results = []
                 for route in foundRoutes {
                     var routeString = ""
                     for (index, cell) in route.enumerated() {
-                        self.board.selectedCells.append(cell)
-                        let startingValue = Int(("A" as UnicodeScalar).value)
-                        if let char = UnicodeScalar(startingValue + cell.column) {
-                            routeString += String(Character(char))
-                        }
+                        //self.board.selectedCells.append(cell)
+                        routeString += cell.column.boardLetter ?? "\(cell.column)"
                         routeString += "\(self.board.size - cell.row)"
                         if index < route.count - 1 {
                             routeString += " -> "
@@ -65,6 +74,11 @@ extension ChessBoard {
                     self.view?.update()
                 }
             }
+        }
+        
+        init() {
+            board = .init()
+            setup()
         }
     }
 }

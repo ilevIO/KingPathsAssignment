@@ -28,6 +28,10 @@
 		D15CD35825E8FDFD00EDB156 /* GetPathsAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD35725E8FDFD00EDB156 /* GetPathsAlgorithm.swift */; };
 		D15CD36025E8FE0F00EDB156 /* PathNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD35F25E8FE0F00EDB156 /* PathNode.swift */; };
 		D15CD36825E9058500EDB156 /* Int+Letter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD36725E9058500EDB156 /* Int+Letter.swift */; };
+		D15CD37225E9094F00EDB156 /* ChessFigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD37125E9094F00EDB156 /* ChessFigure.swift */; };
+		D15CD37B25E9096B00EDB156 /* KingFigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD37A25E9096B00EDB156 /* KingFigure.swift */; };
+		D15CD38425E9099300EDB156 /* ChessPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD38325E9099300EDB156 /* ChessPosition.swift */; };
+		D15CD38925E909AB00EDB156 /* BoardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD38825E909AB00EDB156 /* BoardState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +79,10 @@
 		D15CD35725E8FDFD00EDB156 /* GetPathsAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPathsAlgorithm.swift; sourceTree = "<group>"; };
 		D15CD35F25E8FE0F00EDB156 /* PathNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathNode.swift; sourceTree = "<group>"; };
 		D15CD36725E9058500EDB156 /* Int+Letter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Letter.swift"; sourceTree = "<group>"; };
+		D15CD37125E9094F00EDB156 /* ChessFigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessFigure.swift; sourceTree = "<group>"; };
+		D15CD37A25E9096B00EDB156 /* KingFigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KingFigure.swift; sourceTree = "<group>"; };
+		D15CD38325E9099300EDB156 /* ChessPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessPosition.swift; sourceTree = "<group>"; };
+		D15CD38825E909AB00EDB156 /* BoardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,8 +207,9 @@
 		D15CD32425E8765E00EDB156 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D15CD37025E9094000EDB156 /* Figures */,
 				D15CD35625E8FDEA00EDB156 /* GetPathsAlgorithm */,
-				D15CD32E25E8804000EDB156 /* Board.swift */,
+				D15CD38225E9098200EDB156 /* Board */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -237,6 +246,25 @@
 				D15CD35F25E8FE0F00EDB156 /* PathNode.swift */,
 			);
 			path = GetPathsAlgorithm;
+			sourceTree = "<group>";
+		};
+		D15CD37025E9094000EDB156 /* Figures */ = {
+			isa = PBXGroup;
+			children = (
+				D15CD37125E9094F00EDB156 /* ChessFigure.swift */,
+				D15CD37A25E9096B00EDB156 /* KingFigure.swift */,
+			);
+			path = Figures;
+			sourceTree = "<group>";
+		};
+		D15CD38225E9098200EDB156 /* Board */ = {
+			isa = PBXGroup;
+			children = (
+				D15CD32E25E8804000EDB156 /* Board.swift */,
+				D15CD38325E9099300EDB156 /* ChessPosition.swift */,
+				D15CD38825E909AB00EDB156 /* BoardState.swift */,
+			);
+			path = Board;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -373,9 +401,12 @@
 				D15CD36825E9058500EDB156 /* Int+Letter.swift in Sources */,
 				D15CD34725E8E07A00EDB156 /* BoardRenderer.swift in Sources */,
 				D15CD34D25E8E10300EDB156 /* BoardView.swift in Sources */,
+				D15CD37225E9094F00EDB156 /* ChessFigure.swift in Sources */,
 				D15CD35825E8FDFD00EDB156 /* GetPathsAlgorithm.swift in Sources */,
 				D15CD34125E8E01800EDB156 /* Colors.swift in Sources */,
 				D15CD35225E8E8B300EDB156 /* ChessBoard+View.swift in Sources */,
+				D15CD38925E909AB00EDB156 /* BoardState.swift in Sources */,
+				D15CD37B25E9096B00EDB156 /* KingFigure.swift in Sources */,
 				D15CD32F25E8804000EDB156 /* Board.swift in Sources */,
 				D15CD2EE25E7C53A00EDB156 /* ChessBoardGround.swift in Sources */,
 				D15CD2B725E7C50A00EDB156 /* AppDelegate.swift in Sources */,
@@ -383,6 +414,7 @@
 				D15CD2FE25E7C5DD00EDB156 /* ChessBoardView.swift in Sources */,
 				D15CD36025E8FE0F00EDB156 /* PathNode.swift in Sources */,
 				D15CD2F925E7C5C600EDB156 /* ChessBoard+Presenter.swift in Sources */,
+				D15CD38425E9099300EDB156 /* ChessPosition.swift in Sources */,
 				D15CD2F425E7C5A100EDB156 /* ChessBoard.swift in Sources */,
 				D15CD31D25E85E5C00EDB156 /* UIView+Constraints.swift in Sources */,
 			);
@@ -570,7 +602,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ilevio.ChessBoardAssignment;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -589,7 +621,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ilevio.ChessBoardAssignment;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
