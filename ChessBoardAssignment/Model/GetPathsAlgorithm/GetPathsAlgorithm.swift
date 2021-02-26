@@ -11,12 +11,12 @@ struct GetPathsAlgorithm {
     let stepsLimit: Int
     let boardSize: Int
     
-    func createNodes(currPos: ChessPosition, parent: Node, currStep: Int, pathsPossibilities: [[[Int]]]) {
+    func createNodes(currPos: ChessPosition, parent: PathNode, currStep: Int, pathsPossibilities: [[[Int]]]) {
         //Avoiding cases when destination reached in less steps
         if currPos == destination && currStep > 1 {
             return
         }
-        let node = Node.init(pos: currPos)
+        let node = PathNode.init(pos: currPos)
         parent.children.append(node)
         if currStep == 0 {
             return
@@ -29,8 +29,8 @@ struct GetPathsAlgorithm {
         }
     }
     
-    func mapToPaths(node: Node, path: [ChessPosition], paths: inout [[ChessPosition]]) {
-        let path = path + [node.pos]
+    func mapToPaths(node: PathNode, path: [ChessPosition], paths: inout [[ChessPosition]]) {
+        let path = path + [node.position]
         if !node.children.isEmpty {
             for child in node.children {
                 mapToPaths(node: child, path: path, paths: &paths)
@@ -71,7 +71,7 @@ struct GetPathsAlgorithm {
         }
         
         //Creating tree of paths
-        let treeRoot = Node(pos: source)
+        let treeRoot = PathNode(pos: source)
         
         var paths: [[ChessPosition]] = .init()
         let possibleMoves = KingFigure(location: source)

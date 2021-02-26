@@ -18,7 +18,7 @@ class Board {
     var endPosition: ChessPosition?
     
     var foundRoutes: [[ChessPosition]]?
-    var selectedRoute: [ChessPosition]?
+    var selectedRoute: Int?
     
     var findKingRoutesCompletion: (([[ChessPosition]]) -> Void)? = nil
     

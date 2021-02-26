@@ -29,7 +29,7 @@ extension ChessBoard {
         
         func selectedResult(at index: Int) {
             if index < (board.foundRoutes?.count ?? 0) {
-                board.selectedRoute = board.foundRoutes?[index]
+                board.selectedRoute = index
                 view?.update()
             }
         }

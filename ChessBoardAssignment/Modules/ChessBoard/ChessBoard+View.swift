@@ -28,6 +28,10 @@ extension ChessBoard {
         private let boardSizeTextField: UITextField = .init()
         private let movesLimitLabel: UILabel = .init()
         private let boardSizeLabel: UILabel = .init()
+        
+        //MARK: - Constraints
+        private var topContentConstraint: NSLayoutConstraint!
+        
         //MARK: - Handlers
         @objc private func boardViewTapped(_ recognizer: UITapGestureRecognizer) {
             let location = recognizer.location(in: boardView)
@@ -41,9 +45,28 @@ extension ChessBoard {
         
         @objc private func setValuesButtonTapped(_ sender: UIButton) {
             guard let sizeString = boardSizeTextField.text, let movesLimitString = movesLimitTextField.text else { return }
+            view.endEditing(true)
             presenter.setBoardParameters(size: sizeString, movesLimit: movesLimitString)
         }
         
+        @objc func keyboardWillShow(_ notification: Notification) {
+            guard let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+            topContentConstraint.constant = min(0, (view.frame.height - inputStackView.frame.maxY) - keyboardFrame.cgRectValue.height)
+            let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0.3
+            UIView.animate(withDuration: duration, delay: 0) {
+                self.view.layoutIfNeeded()
+                self.view.setNeedsDisplay()
+            }
+        }
+        
+        @objc func keyboardWillHide(_ notification: Notification) {
+            topContentConstraint.constant = 0
+            let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0.3
+            UIView.animate(withDuration: duration, delay: 0) {
+                self.view.layoutIfNeeded()
+                self.view.setNeedsDisplay()
+            }
+        }
         
         //MARK: - Setup
         private func buildHierarchy() {
@@ -54,12 +77,14 @@ extension ChessBoard {
             
             let boardSizeStackView = UIStackView()
             boardSizeStackView.axis = .horizontal
+            boardSizeStackView.distribution = .fillEqually
             boardSizeStackView.addArrangedSubview(boardSizeLabel)
             boardSizeStackView.addArrangedSubview(boardSizeTextField)
             inputStackView.addArrangedSubview(boardSizeStackView)
             
             let movesLimitStackView = UIStackView()
             movesLimitStackView.axis = .horizontal
+            movesLimitStackView.distribution = .fillEqually
             movesLimitStackView.addArrangedSubview(movesLimitLabel)
             movesLimitStackView.addArrangedSubview(movesLimitTextField)
             inputStackView.addArrangedSubview(movesLimitStackView)
@@ -107,11 +132,18 @@ extension ChessBoard {
             let horizontalInset: CGFloat = 8
             
             resetButton.translatesAutoresizingMaskIntoConstraints = false
-            resetButton.attach(to: boardView, right: horizontalInset, top: verticalInset)
+            topContentConstraint = resetButton.topAnchor.constraint(equalTo: guide.topAnchor)
+            topContentConstraint.isActive = true
+            resetButton.attach(to: guide, right: horizontalInset)
             
             boardView.translatesAutoresizingMaskIntoConstraints = false
-            boardView.attach(to: guide, left: horizontalMargin, right: horizontalMargin, top: verticalMargin)
-            boardView.heightAnchor.constraint(equalTo: boardView.widthAnchor, multiplier: 1.0).isActive = true
+            boardView.attach(to: guide, left: horizontalMargin, right: horizontalMargin)
+            NSLayoutConstraint.activate(
+                [
+                    boardView.topAnchor.constraint(equalTo: resetButton.bottomAnchor, constant: verticalInset),
+                    boardView.heightAnchor.constraint(equalTo: boardView.widthAnchor, multiplier: 1.0)
+                ]
+            )
             
             inputStackView.translatesAutoresizingMaskIntoConstraints = false
             inputStackView.attach(to: guide, left: horizontalMargin, right: horizontalMargin)
@@ -120,7 +152,6 @@ extension ChessBoard {
             resultsTableview.translatesAutoresizingMaskIntoConstraints = false
             resultsTableview.topAnchor.constraint(equalTo: inputStackView.bottomAnchor, constant: verticalInset).isActive = true
             resultsTableview.attach(to: guide, left: horizontalMargin, right: horizontalMargin, bottom: verticalMargin)
-            
         }
         
         private func setup() {
@@ -129,6 +160,9 @@ extension ChessBoard {
             setupLayout()
             
             view.backgroundColor = .white
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         }
         
         override func viewDidLoad() {
