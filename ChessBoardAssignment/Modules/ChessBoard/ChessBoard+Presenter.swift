@@ -53,7 +53,7 @@ extension ChessBoard {
         
         //MARK: - Setup()
         func setup() {
-            board.findKingRoutesCompletion = { [weak self] foundRoutes in
+            board.findFigureRoutesCompletion = { [weak self] foundRoutes in
                 guard let self = self else { return }
                 guard !foundRoutes.isEmpty else {
                     self.board.clear()

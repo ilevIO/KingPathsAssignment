@@ -20,14 +20,14 @@ class Board {
     var foundRoutes: [[ChessPosition]]?
     var selectedRoute: Int?
     
-    var findKingRoutesCompletion: (([[ChessPosition]]) -> Void)? = nil
+    var findFigureRoutesCompletion: (([[ChessPosition]]) -> Void)? = nil
     
     lazy var renderer = BoardRenderer(board: self)
     
-    func findKingRoutes(from source: ChessPosition, to destination: ChessPosition) {
+    func findFigureRoutes(from source: ChessPosition, to destination: ChessPosition) {
         let paths = GetPathsAlgorithm(source: source, destination: destination, stepsLimit: movesLimit, boardSize: size).getPaths(for: KnightFigure())
         foundRoutes = paths
-        findKingRoutesCompletion?(paths)
+        findFigureRoutesCompletion?(paths)
     }
     
     func setState(_ newState: BoardState) {
@@ -58,7 +58,7 @@ class Board {
             selectedCells.append(.init(row: row, column: column))
             guard let startPosition = startPosition else { return }
             state = .none
-            findKingRoutes(from: startPosition, to: _endPosition)
+            findFigureRoutes(from: startPosition, to: _endPosition)
         case .none:
             break
         }
