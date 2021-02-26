@@ -171,6 +171,10 @@ extension ChessBoard {
             setup()
         }
         
+        deinit {
+            NotificationCenter.default.removeObserver(self)
+        }
+        
         init(with presenter: Presenter) {
             self.presenter = presenter
             super.init(nibName: nil, bundle: nil)
