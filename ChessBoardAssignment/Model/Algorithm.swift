@@ -55,7 +55,7 @@ func traverse(from source: ChessPosition, to target: ChessPosition, stepsLimit: 
     func trans(currPos: ChessPosition, parent: Node, currStep: Int) {
         let node = Node.init(pos: currPos)
         parent.children.append(node)
-        if currPos == target {
+        if currStep == 0 {
             return
         }
         let possibles = KingFigure(location: currPos).possibleMoves(in: .init())
