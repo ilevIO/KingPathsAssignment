@@ -54,9 +54,9 @@ class Board {
             state = .setEndPosition
         case .setEndPosition:
             let _endPosition = ChessPosition(row: row, column: column)
+            guard let startPosition = startPosition, _endPosition != startPosition else { return }
             endPosition = _endPosition
             selectedCells.append(.init(row: row, column: column))
-            guard let startPosition = startPosition else { return }
             state = .none
             findFigureRoutes(from: startPosition, to: _endPosition)
         case .none:
