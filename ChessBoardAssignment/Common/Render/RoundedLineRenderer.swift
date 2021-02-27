@@ -26,9 +26,7 @@ struct RoundedLineRenderer {
         var segment = radius / abs(tan(angle/2))
         let pc1 = segment
         let pc2 = segment
-        let pp1 = sqrt(pow(currPoint.x - prevPoint.x, 2) + pow(currPoint.y - prevPoint.y, 2))
-        let pp2 = sqrt(pow(currPoint.x - nextPoint.x, 2) + pow(currPoint.y - nextPoint.y, 2))
-        let minlen = min(pp1, pp2)
+        let minlen = min(distPrev, distNext)
         if segment > minlen {
             segment = minlen
             radius = segment * abs(tan(angle / 2))
@@ -37,8 +35,8 @@ struct RoundedLineRenderer {
         radius = min(radius, distPrev/2, distNext/2)
         
         let p0 = sqrt(pow(radius, 2) + pow(segment, 2))
-        let c1 = CGPoint(x: currPoint.x - (currPoint.x - prevPoint.x) * pc1 / pp1, y: currPoint.y - (currPoint.y - prevPoint.y) * pc1 / pp1)
-        let c2 = CGPoint(x: currPoint.x - (currPoint.x - nextPoint.x) * pc2 / pp2, y: currPoint.y - (currPoint.y - nextPoint.y) * pc2 / pp2)
+        let c1 = CGPoint(x: currPoint.x - (currPoint.x - prevPoint.x) * pc1 / distPrev, y: currPoint.y - (currPoint.y - prevPoint.y) * pc1 / distPrev)
+        let c2 = CGPoint(x: currPoint.x - (currPoint.x - nextPoint.x) * pc2 / distNext, y: currPoint.y - (currPoint.y - nextPoint.y) * pc2 / distNext)
         
         let dx = currPoint.x * 2 - c1.x - c2.x
         let dy = currPoint.y * 2 - c1.y - c2.y
@@ -59,25 +57,26 @@ struct RoundedLineRenderer {
         
         var prevPoint = sequnce[0]
         linePath.move(to: prevPoint)
-        for i in 0..<sequnce.count - 1 {
+        for i in 1..<sequnce.count - 1 {
             let currPoint = sequnce[i]
             let nextPoint = sequnce[i + 1]
             let params = getArcParams(prevPoint: prevPoint, currPoint: currPoint, nextPoint: nextPoint, radius: 10)
             if !(params.center.x.isNaN || params.center.y.isNaN || params.startAngle.isNaN || params.endAngle.isNaN) {
                 linePath.addArc(center: params.center, radius: params.radius, startAngle: params.startAngle, endAngle: params.endAngle, clockwise: params.clockwise)
+            } else {
+                linePath.addLine(to: currPoint)
             }
             prevPoint = sequnce[i]
         }
         
-        let pathEndPoint = sequenceEnd
-        linePath.addLine(to: pathEndPoint)
+        linePath.addLine(to: sequenceEnd)
         let pathLayer = CAShapeLayer()
         pathLayer.path = linePath
         pathLayer.strokeColor = color
         pathLayer.fillColor = UIColor.clear.cgColor
         pathLayer.lineWidth = 2
         pathLayer.addSublayer(
-            ArrowRenderer(source: prevPoint, destination: pathEndPoint, size: 5, color: color)
+            ArrowRenderer(source: prevPoint, destination: sequenceEnd, size: 5, color: color)
                 .arrow()
         )
         return pathLayer
