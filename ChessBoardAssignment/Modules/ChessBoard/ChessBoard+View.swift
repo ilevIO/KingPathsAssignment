@@ -44,6 +44,10 @@ extension ChessBoard {
         }
         
         @objc private func setValuesButtonTapped(_ sender: UIButton) {
+            onValuesUpdated()
+        }
+        
+        private func onValuesUpdated() {
             guard let sizeString = boardSizeTextField.text, let movesLimitString = movesLimitTextField.text else { return }
             view.endEditing(true)
             presenter.setBoardParameters(size: sizeString, movesLimit: movesLimitString)
@@ -120,6 +124,8 @@ extension ChessBoard {
             movesLimitLabel.textColor = UIColor.darkGray
             boardSizeLabel.textColor = UIColor.darkGray
             
+            boardSizeTextField.delegate = self
+            movesLimitTextField.delegate = self
             setFieldsValues()
             
             setValuesButton.addTarget(self, action: #selector(setValuesButtonTapped(_:)), for: .touchUpInside)
@@ -231,4 +237,11 @@ extension ChessBoard.View: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+}
+
+extension ChessBoard.View: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        onValuesUpdated()
+        return true
+    }
 }
