@@ -25,7 +25,13 @@ class Board {
     lazy var renderer = BoardRenderer(board: self)
     
     func findFigureRoutes(from source: ChessPosition, to destination: ChessPosition) {
-        let paths = GetPathsAlgorithm(source: source, destination: destination, stepsLimit: movesLimit, boardSize: size).getPaths(for: KnightFigure())
+        let paths = GetPathsAlgorithm(
+            source: source,
+            destination: destination,
+            stepsLimit: movesLimit,
+            boardSize: size,
+            figure: KnightFigure()
+        ).getPaths()
         foundRoutes = paths
         findFigureRoutesCompletion?(paths)
     }
