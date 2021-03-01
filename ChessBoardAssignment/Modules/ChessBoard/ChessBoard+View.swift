@@ -29,6 +29,7 @@ extension ChessBoard {
         private let movesLimitLabel: UILabel = .init()
         private let boardSizeLabel: UILabel = .init()
         
+        private var dynamicOutputView: ResultsPreviewView?
         //MARK: - Constraints
         private var topContentConstraint: NSLayoutConstraint!
         
@@ -200,6 +201,27 @@ extension ChessBoard {
 }
 
 extension ChessBoard.View: ChessGameView {
+    func showDynamicOutput() {
+        guard dynamicOutputView == nil else { return }
+        let resultsPreviewView = ResultsPreviewView()
+        dynamicOutputView = resultsPreviewView
+        
+        view.addSubview(resultsPreviewView)
+        resultsPreviewView.translatesAutoresizingMaskIntoConstraints = false
+        resultsPreviewView.attach(to: view.safeAreaLayoutGuide, left: 0, right: 0, bottom: 0)
+        resultsPreviewView.attach(to: resultsTableview, top: 0)
+    }
+    
+    func hideDynamicOutput() {
+        dynamicOutputView?.constraints.forEach({ $0.isActive = false })
+        dynamicOutputView?.removeFromSuperview()
+        dynamicOutputView = nil
+    }
+    
+    func updateDynamicOutput(with values: [String]) {
+        dynamicOutputView?.results = values
+    }
+    
     func updateBoard() {
         setFieldsValues()
         boardView.updateBoard()

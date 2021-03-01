@@ -21,11 +21,23 @@ class Board {
     var selectedRoute: Int?
     
     var findFigureRoutesCompletion: (([[ChessPosition]]) -> Void)? = nil
+    var onRouteFound: (([ChessPosition]) -> Void)? = nil
     
     lazy var renderer = BoardRenderer(board: self)
     
     func findFigureRoutes(from source: ChessPosition, to destination: ChessPosition) {
-        let paths = GetPathsAlgorithm(source: source, destination: destination, stepsLimit: movesLimit, boardSize: size).getPaths(for: KnightFigure())
+        let paths = GetPathsAlgorithm(
+            figure: KnightFigure(),
+            source: source,
+            destination: destination,
+            stepsLimit: movesLimit,
+            boardSize: size,
+            onPathFound: { [weak self] foundPaths in
+                self?.onRouteFound?(foundPaths)
+            }
+        )
+        .getPaths()
+        state = .none
         foundRoutes = paths
         findFigureRoutesCompletion?(paths)
     }
@@ -57,9 +69,11 @@ class Board {
             guard let startPosition = startPosition, _endPosition != startPosition else { return }
             endPosition = _endPosition
             selectedCells.append(.init(row: row, column: column))
-            state = .none
-            findFigureRoutes(from: startPosition, to: _endPosition)
-        case .none:
+            state = .performSearch
+            DispatchQueue(label: "findRoutes", qos: .userInteractive).async {
+                self.findFigureRoutes(from: startPosition, to: _endPosition)
+            }
+        default:
             break
         }
     }

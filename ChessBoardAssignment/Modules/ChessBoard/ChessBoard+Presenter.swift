@@ -15,9 +15,16 @@ extension ChessBoard {
         var results: [String] = .init()
         var board: Board
         
+        var pathsAccumulator: [[ChessPosition]] = .init()
+        let pathsAccumulatorCapacity = 10
+        let updateRate = 1000
+        var currentTact = 0
         //MARK: - Events
         func boardViewTapped(at point: CGPoint) {
             board.tapped(at: point)
+            if board.state == .performSearch {
+                view?.showDynamicOutput()
+            }
             view?.update()
         }
         
@@ -51,6 +58,18 @@ extension ChessBoard {
             view?.updateBoard()
         }
         
+        func encodePath(_ path: [ChessPosition]) -> String {
+            var pathString = ""
+            for cell in path {
+                pathString += cell.column.boardLetter ?? "\(cell.column)"
+                pathString += "\(self.board.size - cell.row)"
+                if cell != path.last {
+                    pathString += " -> "
+                }
+            }
+            return pathString
+        }
+ 
         //MARK: - Setup()
         func setup() {
             board.findFigureRoutesCompletion = { [weak self] foundRoutes in
@@ -62,19 +81,32 @@ extension ChessBoard {
                 }
                 self.results = []
                 for path in foundRoutes {
-                    var pathString = ""
-                    for cell in path {
-                        pathString += cell.column.boardLetter ?? "\(cell.column)"
-                        pathString += "\(self.board.size - cell.row)"
-                        if cell != path.last {
-                            pathString += " -> "
-                        }
-                    }
-                    self.results.append(pathString)
+                    self.results.append(self.encodePath(path))
                 }
                 DispatchQueue.main.async {
+                    self.view?.hideDynamicOutput()
                     self.view?.update()
                 }
+            }
+            
+            board.onRouteFound = { [unowned self] route in
+                currentTact += 1
+                if pathsAccumulator.count < pathsAccumulatorCapacity {
+                    self.pathsAccumulator.append(route)
+                }
+                if currentTact == updateRate {
+                    currentTact = 0
+                    let presentingPaths = self.pathsAccumulator
+                    self.pathsAccumulator = .init()
+                    
+                    DispatchQueue.main.async {
+                        self.view?.updateDynamicOutput(
+                            with: presentingPaths
+                                .map({ self.encodePath($0) })
+                        )
+                    }
+                }
+                
             }
         }
         

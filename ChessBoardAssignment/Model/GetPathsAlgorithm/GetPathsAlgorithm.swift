@@ -6,88 +6,36 @@
 //
 
 struct GetPathsAlgorithm {
+    let figure: ChessFigure
     let source: ChessPosition
     let destination: ChessPosition
     let stepsLimit: Int
     let boardSize: Int
+    let onPathFound: (([ChessPosition]) -> Void)
+    ///Algorithm forcefully terminates when this value is reached
+    let maxPathsCount: Int = Int.max
     
-    func createNodes(figure: ChessFigure, currPos: ChessPosition, parent: PathNode, currStep: Int, pathsPossibilities: [[[Int]]]) {
-        let node = PathNode.init(pos: currPos)
-        parent.children.append(node)
-        if currPos == destination {
+    func findPaths(currPos: ChessPosition, currPath: [ChessPosition], traversed: Set<ChessPosition>, foundPaths: inout [[ChessPosition]]) {
+        if maxPathsCount == foundPaths.count {
             return
-        } else if currStep == 0 {
-            parent.children.removeAll(where: { $0.position == currPos })
+        }
+        if currPos == destination && currPath.count >= stepsLimit {
+            let foundPath = currPath + [currPos]
+            foundPaths += [foundPath]
+            onPathFound(foundPath)
             return
         }
         
         let possibleMoves = figure.possibleMoves(from: currPos, within: boardSize)
-        for possible in possibleMoves {
-            if let index = pathsPossibilities[possible.column][possible.row].firstIndex(where: { $0 > 0 }), index < currStep {
-                createNodes(figure: figure, currPos: possible, parent: node, currStep: index, pathsPossibilities: pathsPossibilities)
-            }
+        for possibleMove in possibleMoves where !traversed.contains(possibleMove) {
+            findPaths(currPos: possibleMove, currPath: currPath + [currPos], traversed: traversed.union(Set<ChessPosition>([currPos])), foundPaths: &foundPaths)
         }
     }
     
-    func mapToPaths(node: PathNode, path: [ChessPosition], paths: inout [[ChessPosition]]) {
-        let path = path + [node.position]
-        if !node.children.isEmpty {
-            for child in node.children {
-                mapToPaths(node: child, path: path, paths: &paths)
-            }
-        } else {
-            paths.append(path)
-        }
-    }
-    
-    func getPaths(for figure: ChessFigure) -> [[ChessPosition]] {
-        var pathsPossibilities = [[[Int]]]
-            .init(
-                repeating: [[Int]]
-                    .init(
-                        repeating:
-                            .init(
-                                repeating: 0,
-                                count: stepsLimit + 1
-                            ),
-                        count: boardSize
-                    ),
-                count: boardSize
-            )
+    func getPaths() -> [[ChessPosition]] {
+        var foundPaths: [[ChessPosition]] = .init()
         
-        pathsPossibilities[destination.column][destination.row][0] = 1
-
-        //Counting steps to reach destination from each cell
-        for k in 1...stepsLimit {
-            for column in 0..<boardSize {
-                for row in 0..<boardSize {
-                    let possibleMoves = figure.possibleMoves(from: .init(row: row, column: column), within: boardSize)
-                    
-                    pathsPossibilities[column][row][k] = possibleMoves.reduce(0) {
-                        $0 + pathsPossibilities[$1.column][$1.row][k-1]
-                    }
-                }
-            }
-        }
-        
-        //Creating tree of paths
-        let treeRoot = PathNode(pos: source)
-        
-        var paths: [[ChessPosition]] = .init()
-        let possibleMoves = figure
-            .possibleMoves(from: source, within: boardSize)
-            .filter({
-                (pathsPossibilities[$0.column][$0.row].firstIndex(where: { $0 > 0 }) ?? .max) < stepsLimit
-            })
-        if !possibleMoves.isEmpty {
-            //For each move where it is possible to reach destination in stepsLimit
-            for possible in possibleMoves {
-                createNodes(figure: figure, currPos: possible, parent: treeRoot, currStep: stepsLimit - 1, pathsPossibilities: pathsPossibilities)
-            }
-            //Mapping tree into array of paths
-            mapToPaths(node: treeRoot, path: [], paths: &paths)
-        }
-        
-        return paths
+        findPaths(currPos: source, currPath: [], traversed: .init(), foundPaths: &foundPaths)
+        return foundPaths
     }
 }

@@ -33,6 +33,7 @@
 		D15CD39B25E91E8900EDB156 /* RoundedLineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD39A25E91E8900EDB156 /* RoundedLineRenderer.swift */; };
 		D15CD3A325E91EA700EDB156 /* ArrowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD3A225E91EA700EDB156 /* ArrowRenderer.swift */; };
 		D15CD3B125E9250000EDB156 /* KnightFigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD3B025E9250000EDB156 /* KnightFigure.swift */; };
+		D19D3C8225ED777B0086AEF2 /* ResultsPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19D3C8125ED777B0086AEF2 /* ResultsPreviewView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,7 @@
 		D15CD39A25E91E8900EDB156 /* RoundedLineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedLineRenderer.swift; sourceTree = "<group>"; };
 		D15CD3A225E91EA700EDB156 /* ArrowRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowRenderer.swift; sourceTree = "<group>"; };
 		D15CD3B025E9250000EDB156 /* KnightFigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnightFigure.swift; sourceTree = "<group>"; };
+		D19D3C8125ED777B0086AEF2 /* ResultsPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsPreviewView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,6 +237,7 @@
 			isa = PBXGroup;
 			children = (
 				D15CD34C25E8E10300EDB156 /* BoardView.swift */,
+				D19D3C8125ED777B0086AEF2 /* ResultsPreviewView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -418,6 +421,7 @@
 				D15CD34125E8E01800EDB156 /* Colors.swift in Sources */,
 				D15CD35225E8E8B300EDB156 /* ChessBoard+View.swift in Sources */,
 				D15CD38925E909AB00EDB156 /* BoardState.swift in Sources */,
+				D19D3C8225ED777B0086AEF2 /* ResultsPreviewView.swift in Sources */,
 				D15CD37B25E9096B00EDB156 /* KingFigure.swift in Sources */,
 				D15CD32F25E8804000EDB156 /* Board.swift in Sources */,
 				D15CD2B725E7C50A00EDB156 /* AppDelegate.swift in Sources */,

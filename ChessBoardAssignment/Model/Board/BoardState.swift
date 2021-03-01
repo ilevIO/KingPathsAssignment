@@ -8,5 +8,6 @@
 enum BoardState {
     case setStartPosition
     case setEndPosition
+    case performSearch
     case none
 }
