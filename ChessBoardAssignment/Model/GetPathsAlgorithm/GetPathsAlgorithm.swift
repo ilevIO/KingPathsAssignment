@@ -11,14 +11,16 @@ struct GetPathsAlgorithm {
     let stepsLimit: Int
     let boardSize: Int
     
+    ///Creates paths tree structure
     func createNodes(figure: ChessFigure, currPos: ChessPosition, parent: PathNode, currStep: Int, pathsPossibilities: [[[Int]]]) {
         let node = PathNode.init(pos: currPos)
-        parent.children.append(node)
         if currPos == destination {
+            parent.children.append(node)
             return
         } else if currStep == 0 {
-            parent.children.removeAll(where: { $0.position == currPos })
             return
+        } else {
+            parent.children.append(node)
         }
         
         let possibleMoves = figure.possibleMoves(from: currPos, within: boardSize)
@@ -29,6 +31,7 @@ struct GetPathsAlgorithm {
         }
     }
     
+    ///Sets path parameter to array of paths based on paths tree structure
     func mapToPaths(node: PathNode, path: [ChessPosition], paths: inout [[ChessPosition]]) {
         let path = path + [node.position]
         if !node.children.isEmpty {
@@ -58,13 +61,13 @@ struct GetPathsAlgorithm {
         pathsPossibilities[destination.column][destination.row][0] = 1
 
         //Counting steps to reach destination from each cell
-        for k in 1...stepsLimit {
+        for pathsCount in 1...stepsLimit {
             for column in 0..<boardSize {
                 for row in 0..<boardSize {
                     let possibleMoves = figure.possibleMoves(from: .init(row: row, column: column), within: boardSize)
                     
-                    pathsPossibilities[column][row][k] = possibleMoves.reduce(0) {
-                        $0 + pathsPossibilities[$1.column][$1.row][k-1]
+                    pathsPossibilities[column][row][pathsCount] = possibleMoves.reduce(0) {
+                        $0 + pathsPossibilities[$1.column][$1.row][pathsCount - 1]
                     }
                 }
             }
