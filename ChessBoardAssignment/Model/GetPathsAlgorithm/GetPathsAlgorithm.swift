@@ -11,7 +11,7 @@ struct GetPathsAlgorithm {
     let stepsLimit: Int
     let boardSize: Int
     
-    func createNodes(figure: ChessFigure, currPos: ChessPosition, parent: PathNode, currStep: Int, pathsPossibilities: [[[Int]]], traversed: [ChessPosition]) {
+    func createNodes(figure: ChessFigure, currPos: ChessPosition, parent: PathNode, currStep: Int, pathsPossibilities: [[[Int]]], traversed: Set<ChessPosition>) {
         //Avoiding cases when destination reached in less steps
         if currPos == destination && currStep > 1 {
             return
@@ -29,7 +29,9 @@ struct GetPathsAlgorithm {
         for possible in possibleMoves
         //where pathsPossibilities[possible.column][possible.row][currStep - 1] > 0 {
         {
-            createNodes(figure: figure, currPos: possible, parent: node, currStep: currStep - 1, pathsPossibilities: pathsPossibilities, traversed: traversed + [currPos])
+            var newTraversed = traversed
+            newTraversed.insert(currPos)
+            createNodes(figure: figure, currPos: possible, parent: node, currStep: currStep - 1, pathsPossibilities: pathsPossibilities, traversed: newTraversed)
         }
         if possibleMoves.isEmpty {
             parent.children.removeAll(where: { $0.position == currPos })
