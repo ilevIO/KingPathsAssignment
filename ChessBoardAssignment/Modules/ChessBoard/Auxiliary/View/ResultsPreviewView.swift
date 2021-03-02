@@ -70,7 +70,7 @@ class ResultsPreviewView: UIView {
         addSubview(resultsStackView)
         addSubview(pauseButton)
         addSubview(cancelButton)
-        //addSubview(activityIndicatorView)
+        addSubview(activityIndicatorView)
     }
 
     private func configureSubveiws() {
@@ -101,8 +101,8 @@ class ResultsPreviewView: UIView {
         pauseButton.translatesAutoresizingMaskIntoConstraints = false
         pauseButton.attach(to: self, right: horizontalMargin, bottom: verticalMargin)
         
-        //activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
-        //activityIndicatorView.attach(to: self, centerX: 0, centerY: 0)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.attach(to: self, centerX: 0, centerY: 0)
     }
     
     private func setup() {
