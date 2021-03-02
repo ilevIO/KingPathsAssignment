@@ -205,15 +205,24 @@ extension ChessBoard.View: ChessGameView {
         guard dynamicOutputView == nil else { return }
         let resultsPreviewView = ResultsPreviewView()
         dynamicOutputView = resultsPreviewView
-        
         view.addSubview(resultsPreviewView)
         resultsPreviewView.translatesAutoresizingMaskIntoConstraints = false
         resultsPreviewView.attach(to: view.safeAreaLayoutGuide, left: 0, right: 0, bottom: 0)
         resultsPreviewView.attach(to: resultsTableview, top: 0)
+        
+        resultsPreviewView.onCancelTapped = { [weak self] in
+            self?.presenter.cancelResultsTapped()
+        }
     }
     
     func hideDynamicOutput() {
-        dynamicOutputView?.constraints.forEach({ $0.isActive = false })
+        dynamicOutputView?.constraints.forEach(
+            {
+                if $0.firstItem === self.view || $0.secondItem === self.view {
+                    $0.isActive = false
+                }
+            }
+        )
         dynamicOutputView?.removeFromSuperview()
         dynamicOutputView = nil
     }

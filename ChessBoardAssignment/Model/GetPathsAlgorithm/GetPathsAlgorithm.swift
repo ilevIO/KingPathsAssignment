@@ -5,7 +5,21 @@
 //  Created by Ilya Yelagov on 2/26/21.
 //
 
-struct GetPathsAlgorithm {
+class GetPathsAlgorithm {
+    init(
+        figure: ChessFigure,
+        source: ChessPosition,
+        destination: ChessPosition, stepsLimit: Int, boardSize: Int, maxPathsCount: Int, maxPathLength: Int, onPathFound: @escaping (([ChessPosition]) -> Void)) {
+        self.figure = figure
+        self.source = source
+        self.destination = destination
+        self.stepsLimit = stepsLimit
+        self.boardSize = boardSize
+        self.maxPathsCount = maxPathsCount
+        self.maxPathLength = maxPathLength
+        self.onPathFound = onPathFound
+    }
+    
     let figure: ChessFigure
     let source: ChessPosition
     let destination: ChessPosition
@@ -17,8 +31,14 @@ struct GetPathsAlgorithm {
     let maxPathLength: Int
     let onPathFound: (([ChessPosition]) -> Void)
     
+    private var cancelled: Bool = false
+    
+    func cancel() {
+        cancelled = true
+    }
+    
     func findPaths(currPos: ChessPosition, currPath: [ChessPosition], traversed: Set<ChessPosition>, foundPaths: inout [[ChessPosition]]) {
-        if maxPathsCount == foundPaths.count || currPath.count > maxPathLength {
+        if cancelled || maxPathsCount == foundPaths.count || currPath.count > maxPathLength {
             return
         }
         if currPos == destination && currPath.count >= stepsLimit {

@@ -18,7 +18,7 @@ extension ChessBoard {
         var pathsAccumulator: [[ChessPosition]] = .init()
         let pathsAccumulatorCapacity = 10
         ///Number of tacts per results update
-        let updateRate = 5000
+        let updateRate = 2000
         var currentTact = 0
         //MARK: - Events
         func boardViewTapped(at point: CGPoint) {
@@ -35,6 +35,10 @@ extension ChessBoard {
             currentTact = 0
             pathsAccumulator = []
             view?.update()
+        }
+        
+        func cancelResultsTapped() {
+            board.cancelCalculation()
         }
         
         func selectedResult(at index: Int) {

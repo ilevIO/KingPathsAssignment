@@ -9,6 +9,7 @@ import UIKit
 
 class BoardRenderer {
     private let cellSize: CGFloat = 50
+    private let maxDisplayNumber = 200
     
     weak var board: Board?
     var boardRendered: Bool = false
@@ -68,7 +69,7 @@ class BoardRenderer {
     
     func drawPaths(_ paths: [[ChessPosition]], to layer: CALayer) {
         for (pathIndex, path) in paths.enumerated() {
-            
+            guard pathIndex < maxDisplayNumber else { return }
             let color = pathsColors[pathIndex % pathsColors.count].cgColor
             if let lineLayer = RoundedLineRenderer()
                 .line(

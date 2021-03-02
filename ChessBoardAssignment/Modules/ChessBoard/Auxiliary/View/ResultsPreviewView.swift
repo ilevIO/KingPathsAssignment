@@ -26,6 +26,7 @@ class ResultsPreviewView: UIView {
     private let resultsStackView: UIStackView = .init()
     private let pauseButton: UIButton = .init()
     private let cancelButton: UIButton = .init()
+    private let activityIndicatorView: UIActivityIndicatorView = .init()
     
     private func togglePaused() {
         if paused {
@@ -60,6 +61,8 @@ class ResultsPreviewView: UIView {
     
     @objc private func cancelButtonTapped(_ sender: UIButton) {
         onCancelTapped?()
+        activityIndicatorView.isHidden = false
+        activityIndicatorView.startAnimating()
     }
     
     //MARK: - Setup
@@ -67,6 +70,7 @@ class ResultsPreviewView: UIView {
         addSubview(resultsStackView)
         addSubview(pauseButton)
         addSubview(cancelButton)
+        //addSubview(activityIndicatorView)
     }
 
     private func configureSubveiws() {
@@ -78,6 +82,8 @@ class ResultsPreviewView: UIView {
         
         cancelButton.setTitle("Cancel", for: .normal)
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        
+        activityIndicatorView.isHidden = true
     }
     
     private func setupLayout() {
@@ -94,6 +100,9 @@ class ResultsPreviewView: UIView {
         
         pauseButton.translatesAutoresizingMaskIntoConstraints = false
         pauseButton.attach(to: self, right: horizontalMargin, bottom: verticalMargin)
+        
+        //activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        //activityIndicatorView.attach(to: self, centerX: 0, centerY: 0)
     }
     
     private func setup() {

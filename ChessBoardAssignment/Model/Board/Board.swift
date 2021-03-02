@@ -27,8 +27,12 @@ class Board {
     
     lazy var renderer = BoardRenderer(board: self)
     
+    var pathAlgorithm: GetPathsAlgorithm?
+    
     func findFigurePaths(from source: ChessPosition, to destination: ChessPosition) {
-        let paths = GetPathsAlgorithm(
+        pathAlgorithm?.cancel()
+        
+        let pathAlgorithm = GetPathsAlgorithm(
             figure: KnightFigure(),
             source: source,
             destination: destination,
@@ -40,10 +44,15 @@ class Board {
                 self?.onPathFound?(foundPaths)
             }
         )
-        .getPaths()
+        self.pathAlgorithm = pathAlgorithm
+        let paths = pathAlgorithm.getPaths()
         state = .none
         foundPaths = paths
         findFigurePathsCompletion?(paths)
+    }
+    
+    func cancelCalculation() {
+        pathAlgorithm?.cancel()
     }
     
     func clear() {
@@ -53,6 +62,8 @@ class Board {
         selectedCells = .init()
         selectedPath = nil
         foundPaths = nil
+        pathAlgorithm?.cancel()
+        pathAlgorithm = nil
     }
     
     func tapped(at point: CGPoint) {
