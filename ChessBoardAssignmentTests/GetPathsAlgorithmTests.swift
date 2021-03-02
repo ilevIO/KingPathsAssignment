@@ -72,7 +72,7 @@ class GetPathsAlgorithmTests: XCTestCase {
     }
     
     func testPathsWithCellRevisiting() {
-        let supposedRoutes: Set<[ChessPosition]> = [
+        let supposedPaths: Set<[ChessPosition]> = [
             [
                 .init(row: 0, column: 0),
                 .init(row: 2, column: 1)
@@ -102,16 +102,24 @@ class GetPathsAlgorithmTests: XCTestCase {
             boardSize: boardSize
         ).getPaths()
         
-        XCTAssert(supposedRoutes.count == foundPaths.count)
+        XCTAssert(supposedPaths.count == foundPaths.count)
         for foundPath in foundPaths {
-            XCTAssert(supposedRoutes.contains(foundPath))
+            XCTAssert(supposedPaths.contains(foundPath))
         }
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
+    func measureUpperLimitBoardSize() throws {
         self.measure {
-            // Put the code you want to measure the time of here.
+            let boardSize = 16
+            let stepsLimit = 3
+            
+            let _ = GetPathsAlgorithm(
+                figure: KnightFigure(),
+                source: ChessPosition(row: 5, column: 5),
+                destination: ChessPosition(row: 5, column: 6),
+                stepsLimit: stepsLimit,
+                boardSize: boardSize
+            ).getPaths()
         }
     }
 

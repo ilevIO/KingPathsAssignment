@@ -20,7 +20,7 @@ class BoardTests: XCTestCase {
                 y: CGFloat(intendedCell.row)/CGFloat(boardSize) + .ulpOfOne
             )
         )
-        XCTAssert(board.startPosition == intendedCell)
+        XCTAssertEqual(board.startPosition, intendedCell)
     }
     
     func testMinEdgeCellSelection() {
@@ -52,8 +52,8 @@ class BoardTests: XCTestCase {
                 y: CGFloat(intendedCell.row)/CGFloat(boardSize) + .ulpOfOne
             )
         )
-        XCTAssert(board.startPosition == intendedCell)
-        XCTAssert(board.state == .setEndPosition)
+        XCTAssertEqual(board.startPosition, intendedCell)
+        XCTAssertEqual(board.state, .setEndPosition)
     }
     
     func testBoardEndPositionSelection() {
@@ -71,9 +71,6 @@ class BoardTests: XCTestCase {
             )
         )
         
-        XCTAssert(board.startPosition == intendedStartCell)
-        XCTAssert(board.state == .setEndPosition)
-        
         board.tapped(
             at: CGPoint(
                 x: CGFloat(intendedEndCell.column)/CGFloat(boardSize) + .ulpOfOne,
@@ -81,8 +78,8 @@ class BoardTests: XCTestCase {
             )
         )
         
-        XCTAssert(board.endPosition == intendedEndCell)
-        XCTAssert(board.state == .none)
+        XCTAssertEqual(board.endPosition, intendedEndCell)
+        XCTAssertEqual(board.state, .none)
     }
     
     func testSameCellSelected() {
@@ -99,8 +96,8 @@ class BoardTests: XCTestCase {
             )
         )
         
-        XCTAssert(board.startPosition == intendedCell)
-        XCTAssert(board.state == .setEndPosition)
+        XCTAssertEqual(board.startPosition, intendedCell)
+        XCTAssertEqual(board.state, .setEndPosition)
         
         board.tapped(
             at: CGPoint(
@@ -109,15 +106,65 @@ class BoardTests: XCTestCase {
             )
         )
         
-        XCTAssert(board.endPosition == nil)
-        XCTAssert(board.state == .setEndPosition)
+        XCTAssertNil(board.endPosition)
+        XCTAssertEqual(board.state, .setEndPosition)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    func testPathFinding() {
+        let board = Board()
+        let boardSize = 6
+        board.size = boardSize
+        
+        let intendedStartCell = ChessPosition(row: 0, column: 0)
+        let intendedEndCell = ChessPosition(row: 1, column: 0)
+        
+        board.findFigurePathsCompletion = { foundPaths in
+            XCTAssertFalse(foundPaths.isEmpty)
         }
+        
+        board.tapped(
+            at: CGPoint(
+                x: CGFloat(intendedStartCell.column)/CGFloat(boardSize) + .ulpOfOne,
+                y: CGFloat(intendedStartCell.row)/CGFloat(boardSize) + .ulpOfOne
+            )
+        )
+        board.tapped(
+            at: CGPoint(
+                x: CGFloat(intendedEndCell.column)/CGFloat(boardSize) + .ulpOfOne,
+                y: CGFloat(intendedEndCell.row)/CGFloat(boardSize) + .ulpOfOne
+            )
+        )
+        
+        XCTAssertEqual(board.state, .none)
+        XCTAssertNotNil(board.foundPaths)
+        XCTAssertFalse(board.selectedCells.isEmpty)
     }
-
+    
+    func testBoardClear() {
+        let board = Board()
+        let boardSize = 6
+        board.size = boardSize
+        
+        let intendedStartCell = ChessPosition(row: 0, column: 0)
+        let intendedEndCell = ChessPosition(row: 1, column: 0)
+        
+        board.tapped(
+            at: CGPoint(
+                x: CGFloat(intendedStartCell.column)/CGFloat(boardSize) + .ulpOfOne,
+                y: CGFloat(intendedStartCell.row)/CGFloat(boardSize) + .ulpOfOne
+            )
+        )
+        board.tapped(
+            at: CGPoint(
+                x: CGFloat(intendedEndCell.column)/CGFloat(boardSize) + .ulpOfOne,
+                y: CGFloat(intendedEndCell.row)/CGFloat(boardSize) + .ulpOfOne
+            )
+        )
+        board.clear()
+        XCTAssertEqual(board.state, .setStartPosition)
+        XCTAssertNil(board.startPosition)
+        XCTAssertNil(board.endPosition)
+        XCTAssertNil(board.foundPaths)
+        XCTAssertTrue(board.selectedCells.isEmpty)
+    }
 }

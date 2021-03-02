@@ -19,14 +19,14 @@ class Board {
     
     var currentFigure: ChessFigure = KnightFigure()
     
-    var foundRoutes: [[ChessPosition]]?
-    var selectedRoute: Int?
+    var foundPaths: [[ChessPosition]]?
+    var selectedPath: Int?
     
-    var findFigureRoutesCompletion: (([[ChessPosition]]) -> Void)? = nil
+    var findFigurePathsCompletion: (([[ChessPosition]]) -> Void)? = nil
     
     lazy var renderer = BoardRenderer(board: self)
     
-    func findFigureRoutes(from source: ChessPosition, to destination: ChessPosition) {
+    func findFigurePaths(from source: ChessPosition, to destination: ChessPosition) {
         let paths = GetPathsAlgorithm(
             figure: currentFigure,
             source: source,
@@ -34,12 +34,8 @@ class Board {
             stepsLimit: movesLimit,
             boardSize: size
         ).getPaths()
-        foundRoutes = paths
-        findFigureRoutesCompletion?(paths)
-    }
-    
-    func setState(_ newState: BoardState) {
-        state = newState
+        foundPaths = paths
+        findFigurePathsCompletion?(paths)
     }
     
     func clear() {
@@ -47,8 +43,8 @@ class Board {
         startPosition = nil
         endPosition = nil
         selectedCells = .init()
-        selectedRoute = nil
-        foundRoutes = nil
+        selectedPath = nil
+        foundPaths = nil
     }
     
     func tapped(at point: CGPoint) {
@@ -66,7 +62,7 @@ class Board {
             endPosition = _endPosition
             selectedCells.append(.init(row: row, column: column))
             state = .none
-            findFigureRoutes(from: startPosition, to: _endPosition)
+            findFigurePaths(from: startPosition, to: _endPosition)
         case .none:
             break
         }

@@ -28,8 +28,8 @@ extension ChessBoard {
         }
         
         func selectedResult(at index: Int) {
-            if index < (board.foundRoutes?.count ?? 0) {
-                board.selectedRoute = index
+            if index < (board.foundPaths?.count ?? 0) {
+                board.selectedPath = index
                 view?.update()
             }
         }
@@ -53,15 +53,15 @@ extension ChessBoard {
         
         //MARK: - Setup()
         func setup() {
-            board.findFigureRoutesCompletion = { [weak self] foundRoutes in
+            board.findFigurePathsCompletion = { [weak self] foundPaths in
                 guard let self = self else { return }
-                guard !foundRoutes.isEmpty else {
+                guard !foundPaths.isEmpty else {
                     self.board.clear()
                     self.view?.alert(with: "No paths found")
                     return
                 }
                 self.results = []
-                for path in foundRoutes {
+                for path in foundPaths {
                     var pathString = ""
                     for cell in path {
                         pathString += cell.column.boardLetter ?? "\(cell.column)"

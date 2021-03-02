@@ -105,8 +105,8 @@ class BoardRenderer {
     }
     
     func drawPaths(to layer: CALayer) {
-        guard let board = board, let paths = board.foundRoutes else { return }
-        if let selectedResult = board.selectedRoute {
+        guard let board = board, let paths = board.foundPaths else { return }
+        if let selectedResult = board.selectedPath {
             drawPaths([paths[selectedResult]], to: layer)
         } else {
             drawPaths(paths, to: layer)
