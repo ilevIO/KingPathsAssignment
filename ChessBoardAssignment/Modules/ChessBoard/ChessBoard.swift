@@ -7,4 +7,5 @@
 
 import Foundation
 
+///ChessBoard module namespace
 struct ChessBoard { }
