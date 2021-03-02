@@ -17,6 +17,8 @@ class Board {
     var startPosition: ChessPosition?
     var endPosition: ChessPosition?
     
+    var currentFigure: ChessFigure = KnightFigure()
+    
     var foundRoutes: [[ChessPosition]]?
     var selectedRoute: Int?
     
@@ -25,7 +27,13 @@ class Board {
     lazy var renderer = BoardRenderer(board: self)
     
     func findFigureRoutes(from source: ChessPosition, to destination: ChessPosition) {
-        let paths = GetPathsAlgorithm(source: source, destination: destination, stepsLimit: movesLimit, boardSize: size).getPaths(for: KnightFigure())
+        let paths = GetPathsAlgorithm(
+            figure: currentFigure,
+            source: source,
+            destination: destination,
+            stepsLimit: movesLimit,
+            boardSize: size
+        ).getPaths()
         foundRoutes = paths
         findFigureRoutesCompletion?(paths)
     }
@@ -44,8 +52,8 @@ class Board {
     }
     
     func tapped(at point: CGPoint) {
-        let row = Int(ceil(point.y * CGFloat(size))) - 1
-        let column = Int(ceil(point.x * CGFloat(size))) - 1
+        let row = max(Int(ceil(point.y * CGFloat(size))) - 1, 0)
+        let column = max(Int(ceil(point.x * CGFloat(size))) - 1, 0)
         
         switch state {
         case .setStartPosition:

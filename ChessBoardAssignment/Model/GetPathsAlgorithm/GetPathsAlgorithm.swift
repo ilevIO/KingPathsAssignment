@@ -6,13 +6,14 @@
 //
 
 struct GetPathsAlgorithm {
+    let figure: ChessFigure
     let source: ChessPosition
     let destination: ChessPosition
     let stepsLimit: Int
     let boardSize: Int
     
     ///Creates paths tree structure
-    func createNodes(figure: ChessFigure, currPos: ChessPosition, parent: PathNode, currStep: Int, pathsPossibilities: [[[Int]]]) {
+    func createNodes(currPos: ChessPosition, parent: PathNode, currStep: Int, pathsPossibilities: [[[Int]]]) {
         let node = PathNode.init(pos: currPos)
         if currPos == destination {
             parent.children.append(node)
@@ -26,7 +27,7 @@ struct GetPathsAlgorithm {
         let possibleMoves = figure.possibleMoves(from: currPos, within: boardSize)
         for possible in possibleMoves {
             if let index = pathsPossibilities[possible.column][possible.row].firstIndex(where: { $0 > 0 }), index < currStep {
-                createNodes(figure: figure, currPos: possible, parent: node, currStep: index, pathsPossibilities: pathsPossibilities)
+                createNodes(currPos: possible, parent: node, currStep: index, pathsPossibilities: pathsPossibilities)
             }
         }
     }
@@ -43,7 +44,7 @@ struct GetPathsAlgorithm {
         }
     }
     
-    func getPaths(for figure: ChessFigure) -> [[ChessPosition]] {
+    func getPaths() -> [[ChessPosition]] {
         var pathsPossibilities = [[[Int]]]
             .init(
                 repeating: [[Int]]
@@ -85,7 +86,7 @@ struct GetPathsAlgorithm {
         if !possibleMoves.isEmpty {
             //For each move where it is possible to reach destination in stepsLimit
             for possible in possibleMoves {
-                createNodes(figure: figure, currPos: possible, parent: treeRoot, currStep: stepsLimit - 1, pathsPossibilities: pathsPossibilities)
+                createNodes(currPos: possible, parent: treeRoot, currStep: stepsLimit - 1, pathsPossibilities: pathsPossibilities)
             }
             //Mapping tree into array of paths
             mapToPaths(node: treeRoot, path: [], paths: &paths)

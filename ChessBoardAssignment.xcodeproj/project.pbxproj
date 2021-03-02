@@ -12,7 +12,6 @@
 		D15CD2BE25E7C50A00EDB156 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D15CD2BC25E7C50A00EDB156 /* Main.storyboard */; };
 		D15CD2C025E7C50D00EDB156 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D15CD2BF25E7C50D00EDB156 /* Assets.xcassets */; };
 		D15CD2C325E7C50D00EDB156 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D15CD2C125E7C50D00EDB156 /* LaunchScreen.storyboard */; };
-		D15CD2CE25E7C50D00EDB156 /* ChessBoardAssignmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD2CD25E7C50D00EDB156 /* ChessBoardAssignmentTests.swift */; };
 		D15CD2D925E7C50D00EDB156 /* ChessBoardAssignmentUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD2D825E7C50D00EDB156 /* ChessBoardAssignmentUITests.swift */; };
 		D15CD2F425E7C5A100EDB156 /* ChessBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD2F325E7C5A100EDB156 /* ChessBoard.swift */; };
 		D15CD2F925E7C5C600EDB156 /* ChessBoard+Presenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD2F825E7C5C600EDB156 /* ChessBoard+Presenter.swift */; };
@@ -33,6 +32,8 @@
 		D15CD39B25E91E8900EDB156 /* RoundedLineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD39A25E91E8900EDB156 /* RoundedLineRenderer.swift */; };
 		D15CD3A325E91EA700EDB156 /* ArrowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD3A225E91EA700EDB156 /* ArrowRenderer.swift */; };
 		D15CD3B125E9250000EDB156 /* KnightFigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD3B025E9250000EDB156 /* KnightFigure.swift */; };
+		D19D3C9325EE48BE0086AEF2 /* GetPathsAlgorithmTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19D3C9225EE48BD0086AEF2 /* GetPathsAlgorithmTests.swift */; };
+		D19D3C9825EE493E0086AEF2 /* BoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19D3C9725EE493E0086AEF2 /* BoardTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,7 +62,6 @@
 		D15CD2C225E7C50D00EDB156 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D15CD2C425E7C50D00EDB156 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D15CD2C925E7C50D00EDB156 /* ChessBoardAssignmentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChessBoardAssignmentTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D15CD2CD25E7C50D00EDB156 /* ChessBoardAssignmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessBoardAssignmentTests.swift; sourceTree = "<group>"; };
 		D15CD2CF25E7C50D00EDB156 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D15CD2D425E7C50D00EDB156 /* ChessBoardAssignmentUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChessBoardAssignmentUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D15CD2D825E7C50D00EDB156 /* ChessBoardAssignmentUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessBoardAssignmentUITests.swift; sourceTree = "<group>"; };
@@ -85,6 +85,8 @@
 		D15CD39A25E91E8900EDB156 /* RoundedLineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedLineRenderer.swift; sourceTree = "<group>"; };
 		D15CD3A225E91EA700EDB156 /* ArrowRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowRenderer.swift; sourceTree = "<group>"; };
 		D15CD3B025E9250000EDB156 /* KnightFigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnightFigure.swift; sourceTree = "<group>"; };
+		D19D3C9225EE48BD0086AEF2 /* GetPathsAlgorithmTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPathsAlgorithmTests.swift; sourceTree = "<group>"; };
+		D19D3C9725EE493E0086AEF2 /* BoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,7 +153,8 @@
 		D15CD2CC25E7C50D00EDB156 /* ChessBoardAssignmentTests */ = {
 			isa = PBXGroup;
 			children = (
-				D15CD2CD25E7C50D00EDB156 /* ChessBoardAssignmentTests.swift */,
+				D19D3C9725EE493E0086AEF2 /* BoardTests.swift */,
+				D19D3C9225EE48BD0086AEF2 /* GetPathsAlgorithmTests.swift */,
 				D15CD2CF25E7C50D00EDB156 /* Info.plist */,
 			);
 			path = ChessBoardAssignmentTests;
@@ -436,7 +439,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D15CD2CE25E7C50D00EDB156 /* ChessBoardAssignmentTests.swift in Sources */,
+				D19D3C9325EE48BE0086AEF2 /* GetPathsAlgorithmTests.swift in Sources */,
+				D19D3C9825EE493E0086AEF2 /* BoardTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
