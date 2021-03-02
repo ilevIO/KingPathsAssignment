@@ -11,12 +11,14 @@ struct GetPathsAlgorithm {
     let destination: ChessPosition
     let stepsLimit: Int
     let boardSize: Int
-    let onPathFound: (([ChessPosition]) -> Void)
     ///Algorithm forcefully terminates when this value is reached
-    let maxPathsCount: Int = Int.max
+    let maxPathsCount: Int
+    ///Defines max length of path to be checked
+    let maxPathLength: Int
+    let onPathFound: (([ChessPosition]) -> Void)
     
     func findPaths(currPos: ChessPosition, currPath: [ChessPosition], traversed: Set<ChessPosition>, foundPaths: inout [[ChessPosition]]) {
-        if maxPathsCount == foundPaths.count {
+        if maxPathsCount == foundPaths.count || currPath.count > maxPathLength {
             return
         }
         if currPos == destination && currPath.count >= stepsLimit {

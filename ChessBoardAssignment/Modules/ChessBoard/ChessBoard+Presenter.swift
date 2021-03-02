@@ -17,7 +17,8 @@ extension ChessBoard {
         
         var pathsAccumulator: [[ChessPosition]] = .init()
         let pathsAccumulatorCapacity = 10
-        let updateRate = 1000
+        ///Number of tacts per results update
+        let updateRate = 5000
         var currentTact = 0
         //MARK: - Events
         func boardViewTapped(at point: CGPoint) {
@@ -31,12 +32,14 @@ extension ChessBoard {
         func resetTapped() {
             board.clear()
             results = .init()
+            currentTact = 0
+            pathsAccumulator = []
             view?.update()
         }
         
         func selectedResult(at index: Int) {
-            if index < (board.foundRoutes?.count ?? 0) {
-                board.selectedRoute = index
+            if index < (board.foundPaths?.count ?? 0) {
+                board.selectedPath = index
                 view?.update()
             }
         }
@@ -72,15 +75,17 @@ extension ChessBoard {
  
         //MARK: - Setup()
         func setup() {
-            board.findFigureRoutesCompletion = { [weak self] foundRoutes in
+            board.findFigurePathsCompletion = { [weak self] foundPaths in
                 guard let self = self else { return }
-                guard !foundRoutes.isEmpty else {
+                guard !foundPaths.isEmpty else {
                     self.board.clear()
-                    self.view?.alert(with: "No paths found")
+                    DispatchQueue.main.async {
+                        self.view?.alert(with: "No paths found")
+                    }
                     return
                 }
                 self.results = []
-                for path in foundRoutes {
+                for path in foundPaths {
                     self.results.append(self.encodePath(path))
                 }
                 DispatchQueue.main.async {
@@ -89,7 +94,7 @@ extension ChessBoard {
                 }
             }
             
-            board.onRouteFound = { [unowned self] route in
+            board.onPathFound = { [unowned self] route in
                 currentTact += 1
                 if pathsAccumulator.count < pathsAccumulatorCapacity {
                     self.pathsAccumulator.append(route)

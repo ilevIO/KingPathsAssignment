@@ -10,6 +10,8 @@ import CoreGraphics
 class Board {
     var size: Int = 6
     var movesLimit: Int = 3
+    var maxFindPathsCount: Int = Int.max
+    var maxFindPathLength: Int = Int.max
     
     private(set) var state: BoardState = .setStartPosition
     
@@ -17,33 +19,31 @@ class Board {
     var startPosition: ChessPosition?
     var endPosition: ChessPosition?
     
-    var foundRoutes: [[ChessPosition]]?
-    var selectedRoute: Int?
+    var foundPaths: [[ChessPosition]]?
+    var selectedPath: Int?
     
-    var findFigureRoutesCompletion: (([[ChessPosition]]) -> Void)? = nil
-    var onRouteFound: (([ChessPosition]) -> Void)? = nil
+    var findFigurePathsCompletion: (([[ChessPosition]]) -> Void)? = nil
+    var onPathFound: (([ChessPosition]) -> Void)? = nil
     
     lazy var renderer = BoardRenderer(board: self)
     
-    func findFigureRoutes(from source: ChessPosition, to destination: ChessPosition) {
+    func findFigurePaths(from source: ChessPosition, to destination: ChessPosition) {
         let paths = GetPathsAlgorithm(
             figure: KnightFigure(),
             source: source,
             destination: destination,
             stepsLimit: movesLimit,
             boardSize: size,
+            maxPathsCount: maxFindPathsCount,
+            maxPathLength: maxFindPathLength,
             onPathFound: { [weak self] foundPaths in
-                self?.onRouteFound?(foundPaths)
+                self?.onPathFound?(foundPaths)
             }
         )
         .getPaths()
         state = .none
-        foundRoutes = paths
-        findFigureRoutesCompletion?(paths)
-    }
-    
-    func setState(_ newState: BoardState) {
-        state = newState
+        foundPaths = paths
+        findFigurePathsCompletion?(paths)
     }
     
     func clear() {
@@ -51,8 +51,8 @@ class Board {
         startPosition = nil
         endPosition = nil
         selectedCells = .init()
-        selectedRoute = nil
-        foundRoutes = nil
+        selectedPath = nil
+        foundPaths = nil
     }
     
     func tapped(at point: CGPoint) {
@@ -70,8 +70,8 @@ class Board {
             endPosition = _endPosition
             selectedCells.append(.init(row: row, column: column))
             state = .performSearch
-            DispatchQueue(label: "findRoutes", qos: .userInteractive).async {
-                self.findFigureRoutes(from: startPosition, to: _endPosition)
+            DispatchQueue(label: "findPaths", qos: .userInteractive).async {
+                self.findFigurePaths(from: startPosition, to: _endPosition)
             }
         default:
             break
