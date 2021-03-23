@@ -13,7 +13,7 @@ extension ChessBoard {
         
         weak var view: ChessGameView?
         var results: [String] = .init()
-        var board: Board
+        var board: PathsLookupBoard
         
         //MARK: - Events
         func boardViewTapped(at point: CGPoint) {
@@ -28,10 +28,14 @@ extension ChessBoard {
         }
         
         func selectedResult(at index: Int) {
-            if index < (board.foundPaths?.count ?? 0) {
-                board.selectedPath = index
+            if index < (board.state.foundPaths?.count ?? 0) {
+                board.state.selectedPath = index
                 view?.update()
             }
+        }
+        
+        func boardParameters() -> PathsLookupBoardCondition {
+            board.condition
         }
         
         func setBoardParameters(size: String, movesLimit: String) {
@@ -41,8 +45,7 @@ extension ChessBoard {
                 allowedSizeRange.contains(size),
                 movesLimit > 0 {
                 board.clear()
-                board.size = size
-                board.movesLimit = movesLimit
+                board.condition = .init(size: size, movesLimit: movesLimit)
                 results = []
             } else {
                 view?.alert(with: "Size should be within range \(allowedSizeRange.lowerBound)...\(allowedSizeRange.upperBound) and moves limit greater than zero")
@@ -65,7 +68,7 @@ extension ChessBoard {
                     var pathString = ""
                     for cell in path {
                         pathString += cell.column.boardLetter ?? "\(cell.column)"
-                        pathString += "\(self.board.size - cell.row)"
+                        pathString += "\(self.board.condition.size - cell.row)"
                         if cell != path.last {
                             pathString += " -> "
                         }

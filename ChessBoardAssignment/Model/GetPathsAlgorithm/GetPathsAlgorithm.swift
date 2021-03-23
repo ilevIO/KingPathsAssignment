@@ -12,9 +12,21 @@ struct GetPathsAlgorithm {
     let stepsLimit: Int
     let boardSize: Int
     
+    ///Sets path parameter to array of paths based on paths tree structure
+    func mapToPaths(node: PathNode, path: [ChessPosition], paths: inout [[ChessPosition]]) {
+        let path = path + [node.position]
+        if !node.children.isEmpty {
+            for child in node.children {
+                mapToPaths(node: child, path: path, paths: &paths)
+            }
+        } else {
+            paths.append(path)
+        }
+    }
+    
     ///Creates paths tree structure
     func createNodes(currPos: ChessPosition, parent: PathNode, currStep: Int, pathsPossibilities: [[[Int]]]) {
-        let node = PathNode.init(pos: currPos)
+        let node = PathNode(pos: currPos)
         if currPos == destination {
             parent.children.append(node)
             return
@@ -32,21 +44,18 @@ struct GetPathsAlgorithm {
         }
     }
     
-    ///Sets path parameter to array of paths based on paths tree structure
-    func mapToPaths(node: PathNode, path: [ChessPosition], paths: inout [[ChessPosition]]) {
-        let path = path + [node.position]
-        if !node.children.isEmpty {
-            for child in node.children {
-                mapToPaths(node: child, path: path, paths: &paths)
-            }
-        } else {
-            paths.append(path)
-        }
-    }
-    
     func getPaths() -> [[ChessPosition]] {
-        var pathsPossibilities = [[[Int]]]
-            .init(
+        var pathsPossibilities = [[[Int]]](
+            repeating: .init(
+                repeating: .init(
+                    repeating: 0,
+                    count: stepsLimit + 1
+                ),
+                count: boardSize
+            ),
+            count: boardSize
+        )
+           /*.init(
                 repeating: [[Int]]
                     .init(
                         repeating:
@@ -57,7 +66,7 @@ struct GetPathsAlgorithm {
                         count: boardSize
                     ),
                 count: boardSize
-            )
+            )*/
         
         pathsPossibilities[destination.column][destination.row][0] = 1
 

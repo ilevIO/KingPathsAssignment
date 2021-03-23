@@ -5,8 +5,6 @@
 //  Created by Ilya Yelagov on 2/26/21.
 //
 
-import Foundation
-
 struct KnightFigure: ChessFigure {
     func possibleMoves(from location: ChessPosition, within boardSize: Int) -> [ChessPosition] {
         return [
@@ -18,8 +16,8 @@ struct KnightFigure: ChessFigure {
             .init(row: location.row + 1, column: location.column + 2),
             .init(row: location.row + 2, column: location.column - 1),
             .init(row: location.row + 2, column: location.column + 1),
-        ].filter({
+        ].filter {
             (0..<boardSize).contains($0.row) && (0..<boardSize).contains($0.column)
-        })
+        }
     }
 }

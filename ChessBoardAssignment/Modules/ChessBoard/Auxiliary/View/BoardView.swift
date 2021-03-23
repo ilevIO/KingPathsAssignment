@@ -13,7 +13,7 @@ class BoardView: UIView {
     private var boardLayer: CALayer = .init()
     private var resultLayer: CALayer = .init()
     
-    func configure(with board: Board) {
+    func configure(with board: PathsLookupBoard) {
         boardRenderer = board.renderer
     }
     

@@ -10,7 +10,7 @@ import UIKit
 class BoardRenderer {
     private let cellSize: CGFloat = 50
     
-    weak var board: Board?
+    weak var board: PathsLookupBoard?
     var boardRendered: Bool = false
     
     func drawLabels(at offset: Int, boardSize: Int, to layer: CALayer) {
@@ -39,7 +39,7 @@ class BoardRenderer {
     func drawGrid(to layer: CALayer) {
         guard let board = board else { return }
         
-        let boardSize = CGFloat(board.size)
+        let boardSize = CGFloat(board.condition.size)
         let cellColor = UIColor.systemGray.cgColor
         let backgroundColor = UIColor.init(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
         
@@ -52,11 +52,11 @@ class BoardRenderer {
         layer.addSublayer(gridLayer)
         let path = CGMutablePath()
         
-        for column in 0..<board.size {
+        for column in 0..<board.condition.size {
             
-            drawLabels(at: column, boardSize: board.size, to: layer)
+            drawLabels(at: column, boardSize: board.condition.size, to: layer)
 
-            for row in 0..<board.size {
+            for row in 0..<board.condition.size {
                 if (row + column) % 2 == 0 {
                     path.addRect(.init(x: CGFloat(column) * cellSize, y: CGFloat(row) * cellSize, width: cellSize, height: cellSize))
                 }
@@ -90,7 +90,7 @@ class BoardRenderer {
         guard let board = board else { return }
         
         let selectedCellsPath = CGMutablePath()
-        for selectedCell in board.selectedCells {
+        for selectedCell in board.state.selectedCells {
             selectedCellsPath.addRect(.init(x: CGFloat(selectedCell.column) * cellSize, y: CGFloat(selectedCell.row) * cellSize, width: cellSize, height: cellSize))
         }
         
@@ -105,15 +105,15 @@ class BoardRenderer {
     }
     
     func drawPaths(to layer: CALayer) {
-        guard let board = board, let paths = board.foundPaths else { return }
-        if let selectedResult = board.selectedPath {
+        guard let board = board, let paths = board.state.foundPaths else { return }
+        if let selectedResult = board.state.selectedPath {
             drawPaths([paths[selectedResult]], to: layer)
         } else {
             drawPaths(paths, to: layer)
         }
     }
 
-    init(board: Board) {
+    init(board: PathsLookupBoard) {
         self.board = board
     }
 }

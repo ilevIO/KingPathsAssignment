@@ -73,8 +73,8 @@ extension ChessBoard {
         }
         
         private func setFieldsValues() {
-            movesLimitTextField.text = "\(presenter.board.movesLimit)"
-            boardSizeTextField.text = "\(presenter.board.size)"
+            movesLimitTextField.text = "\(presenter.boardParameters().movesLimit)"
+            boardSizeTextField.text = "\(presenter.boardParameters().size)"
         }
         
         //MARK: - Setup

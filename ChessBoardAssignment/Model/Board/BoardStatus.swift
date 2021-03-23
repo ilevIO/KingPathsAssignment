@@ -5,7 +5,7 @@
 //  Created by Ilya Yelagov on 2/26/21.
 //
 
-enum BoardState {
+enum BoardStatus {
     case setStartPosition
     case setEndPosition
     case none

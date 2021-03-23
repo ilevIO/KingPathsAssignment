@@ -11,7 +11,7 @@ import XCTest
 class BoardTests: XCTestCase {
     
     func testCellSelection(intendedCell: ChessPosition, boardSize: Int) {
-        let board = Board()
+        let board = PathsLookupBoard()
         board.size = boardSize
         
         board.tapped(
@@ -40,7 +40,7 @@ class BoardTests: XCTestCase {
     }
 
     func testBoardStartPositionSelection() {
-        let board = Board()
+        let board = PathsLookupBoard()
         let boardSize = 6
         board.size = boardSize
         
@@ -57,7 +57,7 @@ class BoardTests: XCTestCase {
     }
     
     func testBoardEndPositionSelection() {
-        let board = Board()
+        let board = PathsLookupBoard()
         let boardSize = 6
         board.size = boardSize
         
@@ -83,7 +83,7 @@ class BoardTests: XCTestCase {
     }
     
     func testSameCellSelected() {
-        let board = Board()
+        let board = PathsLookupBoard()
         let boardSize = 6
         board.size = boardSize
         
@@ -111,7 +111,7 @@ class BoardTests: XCTestCase {
     }
     
     func testPathFinding() {
-        let board = Board()
+        let board = PathsLookupBoard()
         let boardSize = 6
         board.size = boardSize
         
@@ -141,7 +141,7 @@ class BoardTests: XCTestCase {
     }
     
     func testBoardClear() {
-        let board = Board()
+        let board = PathsLookupBoard()
         let boardSize = 6
         board.size = boardSize
         

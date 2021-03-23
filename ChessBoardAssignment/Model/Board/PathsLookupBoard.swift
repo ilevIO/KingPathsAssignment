@@ -8,18 +8,11 @@
 import CoreGraphics
 
 class PathsLookupBoard {
-    var condition: BoardCondition = .init()
+    var condition: PathsLookupBoardCondition = .init()
     
-    private(set) var state: BoardState = .setStartPosition
+    private(set) var status: BoardStatus = .setStartPosition
     
-    var selectedCells: [ChessPosition] = .init()
-    var startPosition: ChessPosition?
-    var endPosition: ChessPosition?
-    
-    var currentFigure: ChessFigure = KnightFigure()
-    
-    var foundPaths: [[ChessPosition]]?
-    var selectedPath: Int?
+    var state: PathsLookupBoardState = .init()
     
     var findFigurePathsCompletion: (([[ChessPosition]]) -> Void)? = nil
     
@@ -27,40 +20,43 @@ class PathsLookupBoard {
     
     func findFigurePaths(from source: ChessPosition, to destination: ChessPosition) {
         let paths = GetPathsAlgorithm(
-            figure: currentFigure,
+            figure: state.currentFigure,
             source: source,
             destination: destination,
             stepsLimit: condition.movesLimit,
             boardSize: condition.size
         ).getPaths()
-        foundPaths = paths
+        state.foundPaths = paths
         findFigurePathsCompletion?(paths)
     }
     
     func clear() {
-        state = .setStartPosition
-        startPosition = nil
+        status = .setStartPosition
+        state = .init()
+        /*startPosition = nil
         endPosition = nil
         selectedCells = .init()
         selectedPath = nil
-        foundPaths = nil
+        foundPaths = nil*/
     }
     
     func tapped(at point: CGPoint) {
         let row = max(Int(ceil(point.y * CGFloat(condition.size))) - 1, 0)
         let column = max(Int(ceil(point.x * CGFloat(condition.size))) - 1, 0)
         
-        switch state {
+        switch status {
         case .setStartPosition:
-            startPosition = .init(row: row, column: column)
-            selectedCells.append(.init(row: row, column: column))
-            state = .setEndPosition
+            state.setStartPosition(.init(row: row, column: column))
+            /*startPosition = .init(row: row, column: column)
+            selectedCells.append(.init(row: row, column: column))*/
+            status = .setEndPosition
         case .setEndPosition:
             let _endPosition = ChessPosition(row: row, column: column)
-            guard let startPosition = startPosition, _endPosition != startPosition else { return }
-            endPosition = _endPosition
-            selectedCells.append(.init(row: row, column: column))
-            state = .none
+            guard let startPosition = state.startPosition, _endPosition != startPosition else { return }
+            state.setEndPosition(_endPosition)
+            /*endPosition = _endPosition
+            selectedCells.append(.init(row: row, column: column))*/
+            status = .none
             findFigurePaths(from: startPosition, to: _endPosition)
         case .none:
             break
